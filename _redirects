@@ -1,0 +1,12 @@
+/boat-slips-and-amenities  /#slips     301
+/boat-slips-and-amenities/ /#slips     301
+/availability              /#overnight 301
+/availability/             /#overnight 301
+/local-information         /#eastport  301
+/local-information/        /#eastport  301
+/faq                       /#faq       301
+/faq/                      /#faq       301
+/contact                   /#contact   301
+/contact/                  /#contact   301
+/wp-admin/*                /           301
+/wp-login.php              /           301
