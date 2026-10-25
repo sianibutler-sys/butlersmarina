@@ -4,6 +4,7 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  $$("img").forEach(function (i) { var miss = function () { i.classList.add("is-missing"); }; if (i.complete && !i.naturalWidth) miss(); else i.addEventListener("error", miss); });
   var yr = $("#yr");
   if (yr) yr.textContent = new Date().getFullYear();
 
