@@ -49,11 +49,23 @@ Until the Airtable variables are set, the form opens the visitor's email app wit
 
 Automation: when a record is created, email info@butlersmarinaannapolis.com with the request.
 
+## Openings
+
+Apartment and office openings live in `OPENINGS` at the top of `script.js`. Add one line per opening; leave the list empty when nothing is open and the box asks visitors to get in touch.
+
+## The tide clock
+
+Tide predictions for NOAA station 8575512 through December 31, 2027 are embedded in `index.html` (`#tideData`), so the clock always works. `/api/conditions` adds live water level, water temperature and wind, and refreshes the next 48 hours of predictions. Before the end of 2027, rebuild with a fresh year of predictions.
+
+## Signal flags
+
+The hero hoist spells W-E-L-C-O-M-E and the footer spells B-U-T-L-E-R-S in International Code of Signals flags, defined as SVG symbols at the top of `index.html`.
+
 ## The chart
 
-The hero is a chart of Back Creek drawn from OpenStreetMap shoreline and pier data, projected into an SVG (1200 × 1057 units, lon −76.500 to −76.446, lat 38.945 to 38.982). Butler's sits at about (452, 382). The orange course line is the `track` path; its waypoints are all in open water. The chart is marked "Not for navigation".
+The "Coming in" section is a chart of Back Creek drawn from OpenStreetMap shoreline and pier data, projected into an SVG (1200 × 1057 units, lon −76.500 to −76.446, lat 38.945 to 38.982). Butler's sits at about (446, 379), checked against the US Census geocoder and OpenStreetMap. The orange course line is the `track` path; its waypoints are all in open water. The chart is marked "Not for navigation".
 
-- First visit per session, the course line runs in from the Bay and stamps the berth. Skip button or Escape ends it. Reduced motion skips it entirely.
+- The course line draws in from the Bay when the chart scrolls into view. It is fully drawn at rest, and reduced motion skips the animation.
 - Phones get a tighter view of the creek (`viewBox` set in `script.js`).
 
 ## Changing rates or details
