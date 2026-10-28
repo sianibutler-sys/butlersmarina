@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Butler's Marina | Family-run boat slips on Back Creek, Annapolis</title>
-  <meta name="description" content="Family-run marina on Back Creek in Eastport, Annapolis since 1998. Annual slips for boats 25 to 75 feet, ice-free winter storage in the water, overnight dockage at $3 per foot, and apartments on the property.">
+  <title>Butler's Marina | Boutique marina on Back Creek, Eastport, Annapolis</title>
+  <meta name="description" content="Butler's Marina is a family-run boutique marina on Back Creek in Eastport, Annapolis. Annual slips for boats 25 to 75 feet, winter de-icing, overnight dockage at $3 per foot per night, and apartments and office space on the property.">
   <link rel="canonical" href="https://butlersmarinaannapolis.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Butler's Marina">
@@ -17,13 +17,22 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Butler's Marina">
   <meta name="twitter:image" content="https://butlersmarinaannapolis.com/assets/img/share.jpg">
-  <meta name="theme-color" content="#002147">
+  <meta name="theme-color" content="#0D1A2B">
   <link rel="icon" href="assets/img/burgee.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/gloock.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/photo/aerial-1-1400.webp" as="image" imagesrcset="assets/photo/aerial-1-800.webp 800w, assets/photo/aerial-1-1400.webp 1400w, assets/photo/aerial-1-2400.webp 2400w" imagesizes="100vw">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Splash plays once per visit, never with reduced motion. Set before first paint so nothing flashes. */
+    (function () {
+      var d = document.documentElement, seen = false;
+      try { seen = sessionStorage.getItem("bm-splash") === "1"; } catch (e) {}
+      if (!seen && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("splash-on");
+    })();
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -46,11 +55,6 @@
 
 <svg width="0" height="0" class="sr" aria-hidden="true" focusable="false">
   <defs>
-    <symbol id="burgee" viewBox="0 0 64 40">
-      <path d="M2 2 L62 20 L2 38 Z" fill="#FD5E0F" stroke="#002147" stroke-width="3" stroke-linejoin="round"/>
-      <g fill="none" stroke="#002147" stroke-width="2.2" stroke-linecap="round"><circle cx="13" cy="11.5" r="2"/><path d="M13 13.5 V28"/><path d="M9 17 H17"/><path d="M7 24 Q8 28 13 28 Q18 28 19 24"/></g>
-      <path d="M24.5 13.5 h5.2 c3 0 4.6 1.3 4.6 3.4 0 1.5-.9 2.5-2.3 2.9 1.8.3 2.9 1.5 2.9 3.2 0 2.4-1.8 3.6-5 3.6 h-5.4 z m3 2.2 v3.5 h2.1 c1.5 0 2.2-.6 2.2-1.8 0-1.1-.7-1.7-2.2-1.7 z m0 5.6 v3.8 h2.4 c1.6 0 2.4-.6 2.4-1.9 0-1.3-.8-1.9-2.4-1.9 z" fill="#002147"/>
-    </symbol>
     <!-- International Code of Signals flags, 3:2 -->
     <symbol id="f-W" viewBox="0 0 60 40"><rect width="60" height="40" fill="#12409A"/><rect x="10" y="6.7" width="40" height="26.6" fill="#fff"/><rect x="20" y="13.3" width="20" height="13.4" fill="#C8102E"/></symbol>
     <symbol id="f-E" viewBox="0 0 60 40"><rect width="60" height="20" fill="#12409A"/><rect y="20" width="60" height="20" fill="#C8102E"/></symbol>
@@ -66,19 +70,29 @@
   </defs>
 </svg>
 
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash__inner">
+    <div class="splash__flag"><img src="assets/img/burgee.svg" width="305" height="166" alt=""></div>
+    <p class="splash__name">Butler&#8217;s Marina</p>
+    <p class="splash__place">Annapolis Maryland</p>
+  </div>
+</div>
+
 <header class="bar" id="top">
   <a class="mark" href="#top" aria-label="Butler's Marina, back to top">
-    <svg class="mark__burgee" aria-hidden="true"><use href="#burgee"/></svg>
-    <span class="mark__name">Butler&#8217;s Marina</span>
+    <img class="mark__burgee" src="assets/img/burgee.svg" width="305" height="166" alt="">
+    <span class="mark__words"><span class="mark__name">Butler&#8217;s Marina</span><span class="mark__place">Annapolis Maryland</span></span>
   </a>
+  <a class="bar__phone" href="tel:+14106260051">(410) 626-0051</a>
   <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Menu</span><span class="bar__lines" aria-hidden="true"></span></button>
   <nav id="nav" class="bar__nav" aria-label="Main">
-    <a href="#docks">The docks</a>
+    <a href="#docks">Slips</a>
     <a href="#overnight">Overnight</a>
-    <a href="#ashore">Ashore</a>
-    <a href="#live">Live here</a>
-    <a href="#story">Our story</a>
-    <a href="#coming-in">Coming in</a>
+    <a href="#amenities">Amenities</a>
+    <a href="#live">Apartments</a>
+    <a href="#getting-here">Getting here</a>
+    <a href="#faq">FAQ</a>
+    <a class="bar__navphone" href="tel:+14106260051">Call (410) 626-0051</a>
     <a class="btn btn--burgee" href="#contact">Request a slip</a>
   </nav>
 </header>
@@ -107,16 +121,22 @@
   </figure>
 
   <div class="hero__body">
-    <h1 id="hero-title" class="transom">
-      <span class="transom__name">Butler&#8217;s</span>
-      <span class="transom__port">Annapolis, MD</span>
-    </h1>
-    <p class="hero__line">Your home port on Back Creek. Family run since 1998.</p>
-    <p class="slogan">Family Run. Close Knit. Open Water All Winter.</p>
-    <div class="hero__cta">
-      <a class="btn btn--burgee" href="#contact" data-type="Annual slip">Request a slip</a>
-      <a class="btn btn--ghost" href="#overnight">Plan an overnight</a>
-    </div>
+    <h1 id="hero-title" class="hero__title">Come dock at Butler&#8217;s.</h1>
+    <p class="hero__line">A family-run boutique marina on the Eastport peninsula, since 1998.</p>
+    <nav class="paths" aria-label="What are you looking for?">
+      <a class="path" href="#docks" data-type="Annual slip">
+        <span class="path__name">Annual slips</span>
+        <span class="path__meta">Boats 25 to 75 feet, in the water all year</span>
+      </a>
+      <a class="path" href="#overnight" data-type="Overnight stay">
+        <span class="path__name">Overnight dockage</span>
+        <span class="path__meta">$3 per foot per night, amenities included</span>
+      </a>
+      <a class="path" href="#live" data-type="Apartment">
+        <span class="path__name">Apartments and offices</span>
+        <span class="path__meta">On the property, steps from the docks</span>
+      </a>
+    </nav>
   </div>
 </section>
 
@@ -126,11 +146,11 @@
       <img src="assets/photo/docks-800.webp" srcset="assets/photo/docks-800.webp 800w, assets/photo/docks-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 40vw" width="1600" height="1067" alt="A sailboat with a blue sail cover tied up at the docks, with the marina buildings behind" loading="lazy">
     </figure>
     <div class="letter__body">
-      <h2 id="letter-title">Welcome to the dock.</h2>
-      <p>We opened Butler&#8217;s on Back Creek in 1998 and kept it small on purpose. Fewer slips mean quieter docks, and neighbors who know each other&#8217;s boats by name.</p>
-      <p>Our family grew up on these docks. The fire pit still draws a crowd on summer nights, the de-icers still run all winter, and there is still a Butler to call when you need something.</p>
-      <p class="letter__close">Bring your boat. Bring your people. Stay the season.</p>
-      <p class="letter__sign">Marcellous and Pier Butler<span>Founders, 1998</span></p>
+      <h2 id="letter-title">Welcome to Butler&#8217;s Marina.</h2>
+      <p>Butler&#8217;s is a boutique marina on the Eastport peninsula, family run on Back Creek since 1998. It&#8217;s smaller than most marinas nearby, and that is the point. The setting stays personal, and the community stays close knit.</p>
+      <p>Rest and relaxation come standard. We&#8217;re here to help you enjoy your stay.</p>
+      <p class="slogan slogan--ink">Family Run. Close Knit. Open Water All Winter.</p>
+      <p class="letter__sign">The Butler family</p>
     </div>
   </div>
 </section>
@@ -140,25 +160,28 @@
     <img src="assets/photo/aerial-2-900.webp" srcset="assets/photo/aerial-2-900.webp 900w, assets/photo/aerial-2-1800.webp 1800w" sizes="(max-width: 900px) 100vw, 55vw" width="1800" height="1011" alt="Wide aerial view of the marina and Back Creek with the Eastport neighborhood behind" loading="lazy">
   </div>
   <div class="docks__body">
-    <h2 id="docks-title">Make Butler&#8217;s your home port.</h2>
-    <p class="lede">Annual slips for boats from 25 to 75 feet, close to where Back Creek opens onto the Severn and the Bay.</p>
+    <h2 id="docks-title">Annual slips</h2>
+    <p class="lede">Make Butler&#8217;s your home port. Slips fit boats from 25 to 75 feet, close to where Back Creek opens onto the Severn and the Bay.</p>
     <dl class="spec">
       <div><dt>Boat length</dt><dd><span class="spec__big">25&#8211;75</span> feet</dd></div>
       <div><dt>Docks</dt><dd>Floating docks that ride the tide with your boat</dd></div>
       <div><dt>Lifts</dt><dd>Boat lifts, plus a jet ski lift with its own floating dock</dd></div>
       <div><dt>Winter</dt><dd>De-icers keep the water open, so your boat stays in all year</dd></div>
     </dl>
-    <p class="docks__rates">Annual rates depend on the slip. Send your length, beam and draft, and we&#8217;ll quote the right one.</p>
-    <a class="btn btn--navy" href="#contact" data-type="Annual slip">Ask for an annual quote</a>
+    <p class="docks__rates">Rates depend on the slip. Send your boat&#8217;s length, beam and draft and we&#8217;ll quote the right one.</p>
+    <div class="docks__cta">
+      <a class="btn btn--navy" href="#contact" data-type="Annual slip">Request an annual quote</a>
+      <a class="btn btn--line" href="tel:+14106260051">Call (410) 626-0051</a>
+    </div>
   </div>
 </section>
 
 <section class="overnight" id="overnight" aria-labelledby="overnight-title">
   <div class="wrap overnight__grid">
     <div class="overnight__body">
-      <h2 id="overnight-title">A port of call for the night.</h2>
-      <p class="lede">$3 per foot, per night, with every amenity included.</p>
-      <p>Overnight slips open up when annual tenants are away, so space changes week to week. Book ahead if your dates are set. If they can move, ask to join the waiting list and we&#8217;ll call when a slip opens.</p>
+      <h2 id="overnight-title">Overnight dockage</h2>
+      <p class="lede">$3 per foot, per night. Every amenity is included.</p>
+      <p>Overnight space opens when our annual members are away, so it changes week to week. Reserve ahead if your dates are set. If your plans are flexible, join the waiting list and we&#8217;ll call when a slip opens.</p>
       <ul class="times">
         <li><span>Check in</span>1:00 PM</li>
         <li><span>Check out</span>11:00 AM</li>
@@ -168,7 +191,7 @@
     <form class="ticket" id="calc" aria-labelledby="ticket-title" onsubmit="return false">
       <div class="ticket__main">
         <div class="ticket__head">
-          <svg class="ticket__burgee" aria-hidden="true"><use href="#burgee"/></svg>
+          <img class="ticket__burgee" src="assets/img/burgee.svg" width="305" height="166" alt="">
           <p id="ticket-title">Butler&#8217;s Marina<span>Overnight dockage</span></p>
         </div>
         <div class="ticket__row">
@@ -200,17 +223,17 @@
   </div>
 </section>
 
-<section class="ashore" id="ashore" aria-labelledby="ashore-title">
+<section class="ashore" id="amenities" aria-labelledby="ashore-title">
   <div class="wrap ashore__grid">
     <div class="ashore__head">
-      <h2 id="ashore-title">Ashore at Butler&#8217;s</h2>
-      <p>The mixed-use building on the property keeps the essentials close. Slip tenants have a full bathroom and a washer and dryer a short walk from the docks.</p>
+      <h2 id="ashore-title">Rest and relaxation</h2>
+      <p>Everything you need between trips is on the property. Slip holders have a full bathroom and a washer and dryer in the mixed-use building, a short walk from the docks.</p>
     </div>
     <ul class="ashore__list">
-      <li><strong>Full bathroom</strong>For slip tenants, in the mixed-use building</li>
+      <li><strong>Full bathroom</strong>For slip holders, in the mixed-use building</li>
       <li><strong>Washer and dryer</strong>Laundry without leaving the marina</li>
       <li><strong>Fire pit</strong>With sitting areas around it</li>
-      <li><strong>Grills</strong>On the grounds, open to tenants</li>
+      <li><strong>Grills</strong>On the grounds</li>
       <li><strong>Wi-Fi and cable</strong>At the slips</li>
       <li><strong>Off-street parking</strong>On the property</li>
     </ul>
@@ -220,8 +243,8 @@
 <section class="live" id="live" aria-labelledby="live-title">
   <div class="wrap live__grid">
     <div class="live__body">
-      <h2 id="live-title">Live and work by the water.</h2>
-      <p>The same building holds apartments and office space with views over the marina. Units open up from time to time, and this is where we post them.</p>
+      <h2 id="live-title">Apartments and office space</h2>
+      <p>The mixed-use building also has apartments and office space with views over the marina. Units open up from time to time, and this is where we post them first.</p>
       <div class="openings" id="openings">
         <p class="openings__label">Openings</p>
         <ul class="openings__list" id="openingsList"></ul>
@@ -242,39 +265,7 @@
   </div>
 </section>
 
-<section class="story" id="story" aria-labelledby="story-title">
-  <div class="wrap">
-    <h2 id="story-title">Our story starts in Galesville.</h2>
-    <ol class="story__line">
-      <li>
-        <p class="story__when">1930s<span>Galesville, Maryland</span></p>
-        <p>Margaret Crowner ran a two-room cook shop on the water, with no running water, feeding the oyster shuckers and crab pickers. She and her husband owned that waterfront when very few Black families could. The shop was where neighbors met to talk politics and watch movies.</p>
-      </li>
-      <li>
-        <p class="story__when">1998<span>Eastport, Annapolis</span></p>
-        <p>Marcellous and Pier Butler open the marina on Back Creek. The same year, Eastport declared itself the Maritime Republic of Eastport, with the motto &#8220;We like it this way.&#8221;</p>
-      </li>
-      <li>
-        <p class="story__when">Today<span>Still family run</span></p>
-        <p>The next generation grew up on these docks. The fire pit gathers neighbors the way Margaret&#8217;s shop did.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<section class="year" id="year" aria-labelledby="year-title">
-  <div class="wrap">
-    <h2 id="year-title">A year on Back Creek</h2>
-    <div class="year__grid">
-      <article><h3>Spring</h3><p>Commissioning season. Annapolis Yacht Club&#8217;s Wednesday night races start up in late April.</p></article>
-      <article><h3>Summer</h3><p>Long evenings on the grounds. The grills and the fire pit get their most use.</p></article>
-      <article><h3>Fall</h3><p>The U.S. Sailboat Show fills City Dock every October, across Spa Creek from Eastport.</p></article>
-      <article><h3>Winter</h3><p>The Eastport Yacht Club Lights Parade runs on the second Saturday in December. Back on the creek, the de-icers keep the water open.</p></article>
-    </div>
-  </div>
-</section>
-
-<section class="coming" id="coming-in" aria-labelledby="coming-title">
+<section class="coming" id="getting-here" aria-labelledby="coming-title">
   <div class="wrap coming__grid">
     <div class="coming__chart">
       <svg class="chart" id="chartMap" viewBox="260 180 860 560" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="map-desc">
@@ -310,7 +301,7 @@
       </svg>
     </div>
     <div class="coming__body">
-      <h2 id="coming-title">Coming in</h2>
+      <h2 id="coming-title">Getting here</h2>
       <div class="tide" id="tide">
         <svg class="tide__clock" viewBox="-110 -110 220 220" role="img" aria-labelledby="tide-now">
           <circle r="104" class="tide__rim"/>
@@ -334,7 +325,8 @@
       <div class="coming__ways">
         <div>
           <h3>By water</h3>
-          <p>Back Creek opens off the Severn River just inside the Bay. Call ahead and we&#8217;ll have your slip ready.</p>
+          <p>Back Creek opens off the Severn River just inside the Bay. Call ahead on (410) 626-0051 and we&#8217;ll have your slip ready.</p>
+          <p class="coords">Approximate position <span>38&#176; 58.1&#8242; N, 76&#176; 28.8&#8242; W</span></p>
         </div>
         <div>
           <h3>By land</h3>
@@ -349,8 +341,8 @@
 <section class="eastport" id="eastport" aria-labelledby="eastport-title">
   <div class="wrap eastport__grid">
     <div>
-      <h2 id="eastport-title">Eastport, on foot</h2>
-      <p>Boatyards, sail lofts and good food. Downtown Annapolis and the Naval Academy are across the Spa Creek bridge.</p>
+      <h2 id="eastport-title">Around Eastport</h2>
+      <p>Boatyards, sail lofts and good food, all within walking distance. Downtown Annapolis and the Naval Academy are across the Spa Creek bridge.</p>
     </div>
     <div class="eastport__lists">
       <div>
@@ -369,6 +361,12 @@
           <li><span>Leeward Market</span><span>601 2nd St</span></li>
           <li><span>Eastport Liquors</span><span>1007 Bay Ridge Ave</span></li>
         </ul>
+        <h3 class="cal__head">Worth planning around</h3>
+        <ul class="cal">
+          <li><span>Late April</span>Annapolis Yacht Club&#8217;s Wednesday night races start</li>
+          <li><span>October</span>U.S. Sailboat Show at City Dock</li>
+          <li><span>December</span>Eastport Yacht Club Lights Parade, second Saturday</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -378,13 +376,14 @@
   <div class="wrap faq__grid">
     <h2 id="faq-title">Questions we hear on the dock</h2>
     <div class="faq__list">
-      <details><summary>When did Butler&#8217;s open?</summary><p>In 1998. Marcellous and Pier Butler founded the marina, and the family still runs it.</p></details>
-      <details><summary>Where exactly are you?</summary><p>409 Chester Avenue, Annapolis, MD 21403, on Back Creek on the Eastport peninsula, across Spa Creek from downtown Annapolis.</p></details>
       <details><summary>What size boats fit?</summary><p>Boats from 25 to 75 feet. Send us your length, beam and draft and we&#8217;ll match you to a slip.</p></details>
+      <details><summary>What does an annual slip cost?</summary><p>It depends on the slip. Use the form below or call (410) 626-0051 for a quote.</p></details>
       <details><summary>Can my boat stay in the water over the winter?</summary><p>Yes. De-icers keep the water open around the docks all winter.</p></details>
-      <details><summary>How do overnight stays work?</summary><p>$3 per foot per night, with every amenity included. Slips open when annual tenants are away, so book ahead if you can, or join the waiting list if your dates are flexible. Check in from 1:00 PM, check out by 11:00 AM.</p></details>
-      <details><summary>Is there a bathroom and laundry for slip tenants?</summary><p>Yes. Slip tenants have a full bathroom and a washer and dryer in the mixed-use building on the property.</p></details>
-      <details><summary>Do you rent anything besides slips?</summary><p>Yes. Apartments and office space in the same building. Use the form below and pick the one you&#8217;re after.</p></details>
+      <details><summary>How does overnight dockage work?</summary><p>$3 per foot per night, with every amenity included. Space opens when our annual members are away, so reserve ahead if you can. Check in from 1:00 PM. Check out by 11:00 AM.</p></details>
+      <details><summary>Is there a waiting list?</summary><p>Yes, for overnight guests with flexible plans. Ask to join it in the form below and we&#8217;ll call when a slip opens.</p></details>
+      <details><summary>Is there a bathroom and laundry for slip holders?</summary><p>Yes. Slip holders have a full bathroom and a washer and dryer in the mixed-use building on the property.</p></details>
+      <details><summary>Do you rent apartments or office space?</summary><p>Yes, in the same building. Openings are posted on this page. Use the form below to ask what&#8217;s available.</p></details>
+      <details><summary>When did Butler&#8217;s open?</summary><p>In 1998. Marcellous and Pier Butler founded the marina, and the family still runs it.</p></details>
       <details><summary>Do you send texts?</summary><p>Only if you opt in. Read our <a href="privacy/">SMS privacy policy</a> and <a href="tc/">messaging terms</a>.</p></details>
     </div>
   </div>
@@ -394,7 +393,7 @@
   <div class="wrap contact__grid">
     <div class="contact__body">
       <h2 id="contact-title">Request a slip</h2>
-      <p>Tell us about your boat and what you need. A Butler will get back to you.</p>
+      <p>Tell us about your boat and what you need, and we&#8217;ll get back to you. For tonight or tomorrow, calling is fastest.</p>
       <address>
         <span>409 Chester Avenue<br>Annapolis, MD 21403</span>
         <a href="tel:+14106260051">(410) 626-0051</a>
@@ -435,6 +434,12 @@
 
 </main>
 
+<nav class="dock-bar" id="dockBar" aria-label="Quick actions">
+  <a href="tel:+14106260051">Call</a>
+  <a href="https://www.google.com/maps/dir/?api=1&amp;destination=409+Chester+Avenue+Annapolis+MD+21403" target="_blank" rel="noopener">Directions</a>
+  <a class="dock-bar__main" href="#contact">Request a slip</a>
+</nav>
+
 <footer class="foot">
   <div class="foot__hoist" role="img" aria-label="Signal flags spelling BUTLERS">
     <svg viewBox="0 0 560 64" aria-hidden="true">
@@ -450,6 +455,7 @@
   </div>
   <div class="wrap foot__grid">
     <div class="foot__mark">
+      <img class="foot__burgee" src="assets/img/burgee.svg" width="305" height="166" alt="">
       <p class="foot__name">Butler&#8217;s Marina</p>
       <p class="foot__port">Hailing port: Annapolis, Maryland</p>
       <p class="foot__slogan">Family Run. Close Knit. Open Water All Winter.</p>

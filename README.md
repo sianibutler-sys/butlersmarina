@@ -49,6 +49,14 @@ Until the Airtable variables are set, the form opens the visitor's email app wit
 
 Automation: when a record is created, email info@butlersmarinaannapolis.com with the request.
 
+## Splash screen
+
+The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away after about two seconds. Tap or any key skips it. It never shows with reduced motion, and CSS ends it on its own if the script fails, so it can't trap a visitor. The burgee and full logo are traced vectors of the brand files: `assets/img/burgee.svg` and `assets/img/logo.svg`.
+
+## Built for three visitors
+
+The hero routes slip holders, overnight cruisers and renters to their sections. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away. The header keeps the phone number visible on desktop.
+
 ## Openings
 
 Apartment and office openings live in `OPENINGS` at the top of `script.js`. Add one line per opening; leave the list empty when nothing is open and the box asks visitors to get in touch.

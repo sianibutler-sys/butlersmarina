@@ -19,14 +19,40 @@
   var yr = $("#yr");
   if (yr) yr.textContent = new Date().getFullYear();
 
-  /* Header turns solid once you leave the photo */
-  var bar = $(".bar"), hero = $(".hero");
-  var onScroll = function () {
-    var edge = hero ? hero.offsetHeight - 90 : 40;
-    bar.classList.toggle("is-solid", window.scrollY > edge || !hero);
-  };
+  /* Splash: the burgee goes up, then the page. Tap or any key skips it. CSS ends it on its own if this script never runs. */
+  var root = document.documentElement, splash = $("#splash");
+  if (splash && root.classList.contains("splash-on")) {
+    var done = function () {
+      root.classList.remove("splash-on");
+      try { sessionStorage.setItem("bm-splash", "1"); } catch (e) {}
+    };
+    var skip = function () {
+      splash.classList.add("is-leaving");
+      setTimeout(done, 520);
+      window.removeEventListener("keydown", skip);
+    };
+    splash.addEventListener("click", skip);
+    window.addEventListener("keydown", skip);
+    splash.addEventListener("animationend", function (e) { if (e.animationName === "leave") done(); });
+    setTimeout(done, 3200);
+  }
+
+  /* Header: a shadow once you scroll, and the current section underlined */
+  var bar = $(".bar");
+  var onScroll = function () { bar.classList.toggle("is-scrolled", window.scrollY > 10); };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    $$("#nav a[href^='#']").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var a = links[e.target.id]; if (!a) return;
+        if (e.isIntersecting) { $$("#nav a.is-here").forEach(function (x) { x.classList.remove("is-here"); }); a.classList.add("is-here"); }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    Object.keys(links).forEach(function (id) { var el = document.getElementById(id); if (el) spy.observe(el); });
+  }
 
   var menuBtn = $(".bar__menu"), nav = $("#nav");
   var setMenu = function (open) {
@@ -211,7 +237,7 @@
         .then(function () {
           form.reset();
           fieldsFor("Annual slip");
-          status.textContent = "Request sent. A Butler will be in touch.";
+          status.textContent = "Request sent. We\u2019ll be in touch soon.";
         })
         .catch(function () {
           var lines = ["Type: " + data.type, "Name: " + data.name, "Email: " + data.email];
