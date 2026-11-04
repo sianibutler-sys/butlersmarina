@@ -53,25 +53,23 @@ Automation: when a record is created, email info@butlersmarinaannapolis.com with
 
 The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away after about two seconds. Tap or any key skips it. It never shows with reduced motion, and CSS ends it on its own if the script fails, so it can't trap a visitor. The burgee and full logo are traced vectors of the brand files: `assets/img/burgee.svg` and `assets/img/logo.svg`.
 
-## Built for three visitors
+## Layout
 
-The hero routes slip holders, overnight cruisers and renters to their sections. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away. The header keeps the phone number visible on desktop.
+Bright and booking-first, after the two Dribbble references Siani chose: a cool-toned photo hero with an availability bar, the logo on a white plaque hanging from the top edge, a sideways rail of cards (one per way to dock, each with its price or status), navy split sections, a three-step overnight process, and a photo close around the request form.
+
+The availability bar adapts to what the visitor picks. Overnight shows length, arrival and nights with a live estimate. Annual slip shows length only. Apartment and office hide the boat fields. Its button fills in the request form and moves focus there. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away.
 
 ## Openings
 
 Apartment and office openings live in `OPENINGS` at the top of `script.js`. Add one line per opening; leave the list empty when nothing is open and the box asks visitors to get in touch.
 
-## The tide clock
+## Tide line
 
-Tide predictions for NOAA station 8575512 through December 31, 2027 are embedded in `index.html` (`#tideData`), so the clock always works. `/api/conditions` adds live water level, water temperature and wind, and refreshes the next 48 hours of predictions. Before the end of 2027, rebuild with a fresh year of predictions.
-
-## Signal flags
-
-The hero hoist spells W-E-L-C-O-M-E and the footer spells B-U-T-L-E-R-S in International Code of Signals flags, defined as SVG symbols at the top of `index.html`.
+Tide predictions for NOAA station 8575512 through December 31, 2027 are embedded in `index.html` (`#tideData`) and shown as one line under the map. Before the end of 2027, rebuild with a fresh year of predictions. `/api/conditions` is still in place if live readings are wanted later.
 
 ## The chart
 
-The "Coming in" section is a chart of Back Creek drawn from OpenStreetMap shoreline and pier data, projected into an SVG (1200 × 1057 units, lon −76.500 to −76.446, lat 38.945 to 38.982). Butler's sits at about (446, 379), checked against the US Census geocoder and OpenStreetMap. The orange course line is the `track` path; its waypoints are all in open water. The chart is marked "Not for navigation".
+The Location section is a map of Back Creek drawn from OpenStreetMap shoreline and pier data, projected into an SVG (1200 × 1057 units, lon −76.500 to −76.446, lat 38.945 to 38.982). Butler's sits at about (446, 379), checked against the US Census geocoder and OpenStreetMap. The orange course line is the `track` path; its waypoints are all in open water. The chart is marked "Not for navigation".
 
 - The course line draws in from the Bay when the chart scrolls into view. It is fully drawn at rest, and reduced motion skips the animation.
 - Phones get a tighter view of the creek (`viewBox` set in `script.js`).
