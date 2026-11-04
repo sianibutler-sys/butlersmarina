@@ -51,11 +51,11 @@ Automation: when a record is created, email info@butlersmarinaannapolis.com with
 
 ## Splash screen
 
-The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away after about two seconds. Tap or any key skips it. It never shows with reduced motion, and CSS ends it on its own if the script fails, so it can't trap a visitor. The burgee and full logo are traced vectors of the brand files: `assets/img/burgee.svg` and `assets/img/logo.svg`.
+The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away after about two seconds. Tap or any key skips it. It never shows with reduced motion, and CSS ends it on its own if the script fails, so it can't trap a visitor. The logo is rebuilt as clean vectors: the burgee from its measured geometry with a redrawn anchor, and the type set in real PT Serif glyphs. `burgee.svg` (flag only), `logo.svg` (stacked, brand colors), `logo-light.svg` (stacked, for dark backgrounds), `logo-h.svg` (horizontal, for the header), `wordmark.svg` (type only, for the splash). The header carries the horizontal logo inline so its colors flip from light-on-photo to brand colors once the header turns white.
 
 ## Layout
 
-Bright and booking-first, after the two Dribbble references Siani chose: a cool-toned photo hero with an availability bar, the logo on a white plaque hanging from the top edge, a sideways rail of cards (one per way to dock, each with its price or status), navy split sections, a three-step overnight process, and a photo close around the request form.
+Bright and booking-first, after the two Dribbble references Siani chose: a cool-toned photo hero with an availability bar, the logo on a white plaque hanging from the top edge, a sideways rail of cards (one per way to dock, each with its price or status), navy split sections, a numbered three-step overnight process, and a photo close around the request form.
 
 The availability bar adapts to what the visitor picks. Overnight shows length, arrival and nights with a live estimate. Annual slip shows length only. Apartment and office hide the boat fields. Its button fills in the request form and moves focus there. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away.
 
