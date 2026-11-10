@@ -134,7 +134,7 @@
       var L = Math.round(+qLoa.value || 0), N = clamp(Math.round(+qNights.value || 1), 1, 30);
       if (L && (L < MIN || L > MAX)) { qEst.textContent = "—"; qMath.textContent = L < MIN ? "Our slips start at 25 ft. Call us." : "Our slips top out at 75 ft."; return; }
       qEst.textContent = L ? "$" + (L * N * RATE).toLocaleString("en-US") : "—";
-      qMath.textContent = "estimate at $" + RATE + " per foot per night";
+      qMath.textContent = "at $" + RATE + " per foot per night, electricity included";
     };
     qType.addEventListener("change", show);
     [qLoa, qNights].forEach(function (i) { i.addEventListener("input", est); });

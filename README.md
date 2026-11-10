@@ -61,7 +61,7 @@ The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away 
 - Home: photo hero with the availability bar, a sideways rail of cards (annual slips, boat lifts, overnight, leasing, winter), the family split and a closing call to action.
 - Annual slips: fixed docks, boats 25 to 75 ft, quote on request, waiting list.
 - Boat lifts: boat lifts for 7,000 to 30,000 lbs, jet ski lifts and small tender lifts.
-- Overnight: $4 per foot per night, upon availability, in three steps.
+- Overnight: $4 per foot per night with electricity included, upon availability, in three steps.
 - Amenities, Leasing (long term residential and office space leasing), Location (chart, tide line, restaurants linked to Google Maps), FAQ, Contact.
 
 The availability bar adapts to what the visitor picks. Overnight shows length, arrival and nights with a live estimate. Annual slip and boat lift show length only. Leasing hides the boat fields. Its button opens the contact page with the request filled in (`/contact/?type=…&loa=…&arrive=…&nights=…`). Any link to `contact/?type=Boat+lift` (or another type) preselects that request. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away.
