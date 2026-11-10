@@ -1,12 +1,12 @@
 // Cloudflare Pages Function: POST /api/inquiry
-// Writes a slip, overnight, apartment or office request to Airtable.
+// Writes a slip, lift, overnight or leasing request to Airtable.
 // Set these in Cloudflare Pages > Settings > Variables and secrets:
 //   AIRTABLE_TOKEN  personal access token with data.records:write on the base
 //   AIRTABLE_BASE   base ID, starts with "app"
 //   AIRTABLE_TABLE  table name or ID, e.g. "Requests"
 // An Airtable automation on new records emails info@butlersmarinaannapolis.com.
 
-const TYPES = ['Annual slip', 'Overnight stay', 'Apartment', 'Office space'];
+const TYPES = ['Annual slip', 'Boat lift', 'Overnight stay', 'Residential lease', 'Office lease'];
 
 export async function onRequestPost({ request, env }) {
   let data;

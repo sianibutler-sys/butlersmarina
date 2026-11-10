@@ -8,7 +8,8 @@
   /* Openings in the mixed-use building. One line per opening, e.g.
      "One-bedroom apartment, available December 1". Leave empty when nothing is open. */
   var OPENINGS = [];
-  var RATE = 3, MIN = 25, MAX = 75;
+  var RATE = 4, MIN = 25, MAX = 75;
+  var BOAT = /slip|Overnight|lift/;
 
   var list = $("#openingsList");
   if (list) OPENINGS.forEach(function (t) { var li = document.createElement("li"); li.textContent = t; list.appendChild(li); });
@@ -29,7 +30,7 @@
   }
 
   /* Header: clear over the photo, solid once you scroll; current section underlined */
-  var bar = $(".bar"), hero = $(".hero");
+  var bar = $(".bar"), hero = $(".hero, .phero, .contact--page");
   var onScroll = function () { bar.classList.toggle("is-solid", !hero || window.scrollY > 40); };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -44,18 +45,6 @@
     menuBtn.addEventListener("click", function () { setMenu(menuBtn.getAttribute("aria-expanded") !== "true"); });
     $$("#nav a").forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
-  }
-  if ("IntersectionObserver" in window) {
-    var links = {};
-    $$("#nav a[href^='#']").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
-    var spy = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        var a = links[e.target.id]; if (!a || !e.isIntersecting) return;
-        $$("#nav a.is-here").forEach(function (x) { x.classList.remove("is-here"); });
-        a.classList.add("is-here");
-      });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-    Object.keys(links).forEach(function (id) { var el = document.getElementById(id); if (el) spy.observe(el); });
   }
 
   /* Card rail */
@@ -116,7 +105,7 @@
   var form = $("#inquiry"), status = $("#inqStatus");
   var fieldsFor = function (type) {
     $$("[data-for]", form).forEach(function (el) {
-      el.hidden = !(el.dataset.for === "boat" ? /slip|Overnight/.test(type) : el.dataset.for === "dates" ? type === "Overnight stay" : true);
+      el.hidden = !(el.dataset.for === "boat" ? BOAT.test(type) : el.dataset.for === "dates" ? type === "Overnight stay" : true);
     });
   };
   var setType = function (type) {
@@ -132,12 +121,12 @@
     var today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
     qArrive.min = today.toISOString().slice(0, 10);
     var show = function () {
-      var v = qType.value, slip = /slip|Overnight/.test(v), night = v === "Overnight stay";
+      var v = qType.value, slip = BOAT.test(v), night = v === "Overnight stay";
       $$("[data-show]", finder).forEach(function (el) {
         var k = el.dataset.show;
         el.hidden = !(k === "slip" ? slip : k === "dates" ? night : night);
       });
-      $(".finder__go span", finder).textContent = night ? "Check availability" : v === "Annual slip" ? "Request a quote" : "Ask what’s open";
+      $(".finder__go span", finder).textContent = night ? "Check availability" : v === "Annual slip" ? "Request a quote" : v === "Boat lift" ? "Ask about a lift" : "Ask what’s open";
       qNote.textContent = "";
       est();
     };
@@ -154,27 +143,30 @@
       b.addEventListener("click", function () { qNights.value = clamp((+qNights.value || 1) + (+b.dataset.step), 1, 30); est(); });
     });
     finder.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var v = qType.value, L = Math.round(+qLoa.value || 0), N = clamp(+qNights.value || 1, 1, 30);
-      if (/slip|Overnight/.test(v) && L && (L < MIN || L > MAX)) { qNote.textContent = "Our slips fit boats 25 to 75 ft. Call (410) 626-0051 and we’ll talk it through."; return; }
-      setType(v);
-      if (/slip|Overnight/.test(v) && L) form.loa.value = L;
-      if (v === "Overnight stay") {
-        if (qArrive.value) {
-          form.arrive.value = qArrive.value;
-          var d = new Date(qArrive.value + "T12:00:00"); d.setDate(d.getDate() + N);
-          form.depart.value = d.toISOString().slice(0, 10);
-        }
-        if (!form.message.value) form.message.value = N + (N === 1 ? " night" : " nights") + (L ? " for a " + L + "-foot boat." : ".");
-      }
-      $("#contact").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
-      setTimeout(function () { form.name.focus({ preventScroll: true }); }, reduce ? 0 : 700);
+      var v = qType.value, L = Math.round(+qLoa.value || 0);
+      if (BOAT.test(v) && L && (L < MIN || L > MAX)) { e.preventDefault(); qNote.textContent = "Our slips fit boats 25 to 75 ft. Call (410) 626-0051 and we’ll talk it through."; return; }
+      /* send only what applies to this request */
+      $$("[data-show]", finder).forEach(function (el) { $$("input", el).forEach(function (i) { i.disabled = el.hidden || !i.value; }); });
+      setTimeout(function () { $$("input", finder).forEach(function (i) { i.disabled = false; }); }, 0);
     });
     show();
   }
 
   if (form) {
     fieldsFor("Annual slip");
+    var qs = new URLSearchParams(location.search), t = qs.get("type");
+    if (t) {
+      setType(t);
+      var L = Math.round(+qs.get("loa") || 0), N = clamp(Math.round(+qs.get("nights") || 0), 0, 30), A = qs.get("arrive") || "";
+      if (L && BOAT.test(t)) form.loa.value = L;
+      if (t === "Overnight stay" && /^\d{4}-\d{2}-\d{2}$/.test(A)) {
+        form.arrive.value = A;
+        if (N) { var d = new Date(A + "T12:00:00"); d.setDate(d.getDate() + N); form.depart.value = d.toISOString().slice(0, 10); }
+      }
+      if (t === "Overnight stay" && N) form.message.value = N + (N === 1 ? " night" : " nights") + (L ? " for a " + L + "-foot boat." : ".");
+      if (t === "Boat lift") form.message.placeholder = "Boat weight, and the lift size you need";
+      if (qs.has("loa") || qs.has("arrive")) form.name.focus({ preventScroll: true });
+    }
     $$('input[name="type"]', form).forEach(function (r) { r.addEventListener("change", function () { fieldsFor(r.value); }); });
     $$("a[data-type]").forEach(function (a) { a.addEventListener("click", function () { setType(a.dataset.type); }); });
 
@@ -195,7 +187,7 @@
       var btn = $(".inq__send", form);
       btn.disabled = true;
       status.textContent = "Sending…";
-      fetch("api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+      fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw j; return j; }); })
         .then(function () { form.reset(); fieldsFor("Annual slip"); status.textContent = "Request sent. We’ll be in touch soon."; })
         .catch(function () {
