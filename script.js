@@ -81,6 +81,82 @@
     });
   });
 
+  /* Area map: filter places, pick one, draw the walk, zoom to fit */
+  var am = $("[data-areamap]");
+  if (am) {
+    var AM = JSON.parse($("#amData").textContent), svg = $(".am__svg", am), VW = 1200, VH = 1077;
+    var full = [0, 0, VW, VH], vb = full.slice(), anim = null, cat = "all", sel = null;
+    var pins = $$(".am__pin", am), home = $(".am__home", am), routeEl = $(".am__route", am), card = $(".am__card", am);
+    var items = $$(".am__item", am), groups = $$(".am__group", am);
+    var origin = "409 Chester Avenue, Annapolis, MD 21403";
+    var at = {}; AM.places.forEach(function (p) { at[p.i] = p; });
+    function paint(v) {
+      vb = v; svg.setAttribute("viewBox", v.map(function (n) { return n.toFixed(1); }).join(" "));
+      var s = v[2] / (svg.clientWidth || VW); svg.style.setProperty("--s", s.toFixed(3));
+      pins.forEach(function (g) { var p = at[g.dataset.i]; g.setAttribute("transform", "translate(" + p.x + " " + p.y + ") scale(" + s.toFixed(3) + ")"); });
+      home.setAttribute("transform", "translate(" + AM.home[0] + " " + AM.home[1] + ") scale(" + s.toFixed(3) + ")");
+    }
+    function go(target) {
+      if (anim) cancelAnimationFrame(anim);
+      if (reduce) return paint(target);
+      var from = vb.slice(), t0 = performance.now(), dur = 520;
+      (function tick(now) {
+        var k = Math.min(1, (now - t0) / dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        paint(from.map(function (a, j) { return a + (target[j] - a) * e; }));
+        if (k < 1) anim = requestAnimationFrame(tick);
+      })(t0);
+    }
+    function fit(pts, minW) {
+      var xs = pts.map(function (p) { return p[0]; }), ys = pts.map(function (p) { return p[1]; });
+      var x0 = Math.min.apply(0, xs), x1 = Math.max.apply(0, xs), y0 = Math.min.apply(0, ys), y1 = Math.max.apply(0, ys);
+      var w = Math.max(x1 - x0, minW || 300), h = Math.max(y1 - y0, (minW || 300) * VH / VW);
+      w *= 1.35; h *= 1.35;
+      if (w / h > VW / VH) h = w * VH / VW; else w = h * VW / VH;
+      if (w >= VW) return full.slice();
+      var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      var x = Math.min(Math.max(cx - w / 2, 0), VW - w), y = Math.min(Math.max(cy - h / 2, 0), VH - h);
+      return [x, y, w, h];
+    }
+    function routePts(d) { var n = d.match(/-?\d+(\.\d+)?/g) || [], out = []; for (var j = 0; j + 1 < n.length; j += 2) out.push([+n[j], +n[j + 1]]); return out; }
+    function showCat(c) {
+      cat = c; am.classList.toggle("is-cat", c !== "all"); $(".am__list", am).scrollTop = 0;
+      $$(".am__tabs button", am).forEach(function (b) { b.setAttribute("aria-checked", String(b.dataset.cat === c)); });
+      pins.forEach(function (g) { g.classList.toggle("is-hidden", c !== "all" && at[g.dataset.i].cat !== c); });
+      groups.forEach(function (g) { g.hidden = c !== "all" && g.dataset.cat !== c; });
+      if (sel !== null && c !== "all" && at[sel].cat !== c) clear();
+      var pts = AM.places.filter(function (p) { return c === "all" || p.cat === c; }).map(function (p) { return [p.x, p.y]; });
+      pts.push(AM.home);
+      go(c === "all" ? full.slice() : fit(pts, 260));
+    }
+    function clear() {
+      sel = null; routeEl.setAttribute("d", "");
+      pins.forEach(function (g) { g.classList.remove("is-on"); });
+      items.forEach(function (b) { b.classList.remove("is-on"); });
+      card.innerHTML = '<p class="am__hint">Pick a place to see the walk from Butler’s.</p>';
+    }
+    function pick(i, fromList) {
+      var p = at[i]; sel = +i;
+      routeEl.setAttribute("d", p.route);
+      pins.forEach(function (g) { g.classList.toggle("is-on", +g.dataset.i === sel); });
+      items.forEach(function (b) { b.classList.toggle("is-on", +b.dataset.i === sel); });
+      var dir = "https://www.google.com/maps/dir/?api=1&origin=" + encodeURIComponent(origin) + "&destination=" + p.q + "&travelmode=walking";
+      card.innerHTML = "<h3>" + p.name + "</h3><p class=\"am__meta\">" + p.addr + "</p><p class=\"am__time\">" + p.mins + " min walk · " + p.mi + " mi</p>" +
+        "<p class=\"am__links\"><a href=\"" + dir + "\" target=\"_blank\" rel=\"noopener\">Walking directions</a></p>";
+      go(fit(routePts(p.route).concat([[p.x, p.y], AM.home]), 220));
+      if (fromList && window.innerWidth <= 1020) svg.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    }
+    $$(".am__tabs button", am).forEach(function (b) { b.addEventListener("click", function () { showCat(b.dataset.cat); }); });
+    items.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.i, true); }); });
+    pins.forEach(function (g) {
+      g.setAttribute("tabindex", "0"); g.setAttribute("role", "button"); g.setAttribute("aria-label", at[g.dataset.i].name.replace(/&#8217;/g, "’").replace(/&amp;/g, "&") + ", " + at[g.dataset.i].mins + " minute walk");
+      g.addEventListener("click", function () { pick(g.dataset.i); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(g.dataset.i); } });
+    });
+    $("[data-zoom=home]", am).addEventListener("click", function () { clear(); showCat("all"); });
+    paint(full);
+    window.addEventListener("resize", function () { paint(vb); });
+  }
+
   /* Card rail */
   var track = $("#railTrack");
   if (track) {

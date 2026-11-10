@@ -7,6 +7,7 @@ and in the artifact preview. Run:  python3 site.py            -> /home/claude/bu
 """
 import re, sys, os, math, json
 from dockmap import markup as dockmap
+from areamap import markup as areamap
 
 SRC = open('/home/claude/work/index.src.html').read()
 LOGO = re.search(r'<svg class="logo".*?</svg>', SRC, re.S).group(0)
@@ -398,44 +399,26 @@ def places(rows):
 
 LOCATION = phero('On the Eastport peninsula', 'Boatyards, sail lofts and good food, all within walking distance. Downtown Annapolis and the Naval Academy are across the Spa Creek bridge.') + f'''
 <section class="place" aria-labelledby="place-title">
-  <div class="wrap place__grid">
-    <div class="place__map">
-      {CHART}
-      <p class="tide" id="tide"><span class="tide__now" id="tide-now">Annapolis tide</span> <span class="tide__next" id="tideNext"></span></p>
+  <div class="wrap">
+    <div class="steps__head">
+      <h2 id="place-title">{RULE}What&#8217;s nearby</h2>
+      <p>Walk times start at our dock on Chester Avenue and follow the streets. Pick a place to see the way there.</p>
     </div>
-    <div class="place__body">
-      <h2 id="place-title">{RULE}Getting here</h2>
-      <div class="place__cols">
-        <div>
-          <h3>By water</h3>
-          <p>Back Creek opens off the Severn River just inside the Bay. Call ahead and we&#8217;ll have your slip ready.</p>
-          <p class="coords">38&#176; 58.1&#8242; N, 76&#176; 28.8&#8242; W</p>
-        </div>
-        <div>
-          <h3>By land</h3>
-          <p>409 Chester Avenue, Annapolis, MD 21403. Off-street parking on the property.</p>
-          <a class="link" href="{DIRECTIONS}" target="_blank" rel="noopener">Driving directions</a>
-        </div>
-      </div>
-    </div>
+    ''' + areamap() + f'''
+    <p class="tide" id="tide"><span class="tide__now" id="tide-now">Annapolis tide</span> <span class="tide__next" id="tideNext"></span></p>
   </div>
-  <div class="wrap eat">
-    <div>
-      <h2>{RULE}Where to eat</h2>
-      <p>A short walk or dinghy ride from the slip. Tap an address for the map.</p>
-    </div>
-    <div class="eat__lists">
+  <div class="wrap place__here">
+    <h2>{RULE}Getting here</h2>
+    <div class="place__cols">
       <div>
-        <h3>Restaurants</h3>
-        <ul class="places">
-          {places(EAT)}
-        </ul>
+        <h3>By water</h3>
+        <p>Back Creek opens off the Severn River just inside the Bay. Call ahead and we&#8217;ll have your slip ready.</p>
+        <p class="coords">38&#176; 58.1&#8242; N, 76&#176; 28.8&#8242; W</p>
       </div>
       <div>
-        <h3>Provisions</h3>
-        <ul class="places">
-          {places(SHOP)}
-        </ul>
+        <h3>By land</h3>
+        <p>409 Chester Avenue, Annapolis, MD 21403. Off-street parking on the property.</p>
+        <a class="link" href="{DIRECTIONS}" target="_blank" rel="noopener">Driving directions</a>
       </div>
     </div>
   </div>

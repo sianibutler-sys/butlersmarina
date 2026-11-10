@@ -72,6 +72,12 @@ The Slips and Lifts pages carry an interactive map of the docks, traced from the
 
 Lift slips are set in `LIFTS` at the top of `dockmap.py`: 1, 3, 4, 5, 20, 24, 25, 26, 27, 28, 29. Change the set and rebuild when a lift is added or moved.
 
+## Area map
+
+The Location page has an interactive map of Eastport, downtown and the Naval Academy, drawn from OpenStreetMap data (`tools/areamap.py`). Filter by Eat and drink, Shops, Parks or Landmarks; pick a place and the map zooms to the walking route from 409 Chester Avenue, with the walk time and a link to walking directions in Google Maps. Walk times are shortest paths over the OpenStreetMap street network at 3 mph, so they follow real streets and the Spa Creek bridge.
+
+To add or move a place, edit `PLACES` in `tools/areamap.py` and rebuild. The street and shoreline data is a snapshot pulled November 2026; rebuild from a fresh pull if streets change.
+
 ## Openings
 
 Apartment and office openings live in `OPENINGS` at the top of `script.js`. Add one line per opening; leave the list empty when nothing is open and the box asks visitors to get in touch.
