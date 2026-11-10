@@ -47,6 +47,40 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
   }
 
+  /* Dock map: pick a slip, switch between all slips and lift slips */
+  $$("[data-dockmap]").forEach(function (dm) {
+    var info = $(".dm__info", dm), on = null;
+    var ask = document.createElement("a");
+    ask.className = "dm__ask";
+    var contactBase = ($(".dock-bar__main") || { getAttribute: function () { return "contact/"; } }).getAttribute("href").split("?")[0];
+    function where(n) {
+      if (n <= 4) return "Shore walk, closest to the building";
+      if (n <= 14) return "Main pier, creek side";
+      if (n <= 21) return "Out at the end of the pier";
+      return "Main pier, shore side";
+    }
+    function pick(n) {
+      on = n;
+      $$(".dm__slip", dm).forEach(function (g) { g.classList.toggle("is-on", +g.dataset.slip === n); });
+      var lift = !!$(".dm__slip.is-lift[data-slip='" + n + "']", dm);
+      info.innerHTML = "<h3>Slip " + n + "</h3><p class=\"dm__where\">" + (lift ? "Lift slip. " : "") + where(n) + ".</p>";
+      ask.textContent = "Ask about slip " + n;
+      ask.href = contactBase + "?type=" + (lift ? "Boat+lift" : "Annual+slip") + "&slip=" + n;
+      info.appendChild(ask);
+    }
+    $$(".dm__slip", dm).forEach(function (g) {
+      g.addEventListener("click", function () { pick(+g.dataset.slip); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(+g.dataset.slip); } });
+    });
+    $$(".dm__view button", dm).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var lifts = b.dataset.view === "lifts";
+        dm.classList.toggle("dm--lifts", lifts);
+        $$(".dm__view button", dm).forEach(function (o) { o.setAttribute("aria-checked", String(o === b)); });
+      });
+    });
+  });
+
   /* Card rail */
   var track = $("#railTrack");
   if (track) {
@@ -165,6 +199,8 @@
       }
       if (t === "Overnight stay" && N) form.message.value = N + (N === 1 ? " night" : " nights") + (L ? " for a " + L + "-foot boat." : ".");
       if (t === "Boat lift") form.message.placeholder = "Boat weight, and the lift size you need";
+      var SN = Math.round(+qs.get("slip") || 0);
+      if (SN >= 1 && SN <= 29) form.message.value = "Asking about slip " + SN + ".";
       if (qs.has("loa") || qs.has("arrive")) form.name.focus({ preventScroll: true });
     }
     $$('input[name="type"]', form).forEach(function (r) { r.addEventListener("change", function () { fieldsFor(r.value); }); });

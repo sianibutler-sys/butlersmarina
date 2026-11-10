@@ -1,6 +1,6 @@
 # Butler's Marina
 
-Website for Butler's Marina (Butler's Waterfront & Marina), 409 Chester Avenue, Annapolis, MD 21403. Family-run on Back Creek in Eastport since 1998.
+Website for Butler's Marina (Butler's Waterfront & Marina), 409 Chester Avenue, Annapolis, MD 21403. A boutique marina on Back Creek in Eastport since 1998.
 
 Built by Siani Creates. Static HTML/CSS/JS on Cloudflare Pages, with two Pages Functions.
 
@@ -58,13 +58,19 @@ The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away 
 
 ## Pages
 
-- Home: photo hero with the availability bar, a sideways rail of cards (annual slips, boat lifts, overnight, leasing, winter), the family split and a closing call to action.
+- Home: photo hero with the availability bar, a sideways rail of cards (annual slips, boat lifts, overnight, leasing, winter), the "Boutique by design" split and a closing call to action.
 - Annual slips: fixed docks, boats 25 to 75 ft, quote on request, waiting list.
 - Boat lifts: boat lifts for 7,000 to 30,000 lbs, jet ski lifts and small tender lifts.
 - Overnight: $4 per foot per night with electricity included, upon availability, in three steps.
 - Amenities, Leasing (long term residential and office space leasing), Location (chart, tide line, restaurants linked to Google Maps), FAQ, Contact.
 
 The availability bar adapts to what the visitor picks. Overnight shows length, arrival and nights with a live estimate. Annual slip and boat lift show length only. Leasing hides the boat fields. Its button opens the contact page with the request filled in (`/contact/?type=…&loa=…&arrive=…&nights=…`). Any link to `contact/?type=Boat+lift` (or another type) preselects that request. On phones, a bar at the bottom keeps Call, Directions and Request a slip one tap away.
+
+## Dock map
+
+The Slips and Lifts pages carry an interactive map of the docks, traced from the 2011 condominium plat (Charles P. Johnson & Associates) and drawn as SVG by `dockmap.py`. Desktop gets a wide view with the main pier running left to right; phones get a tall view. Tap or press Enter on a slip to see where it sits and ask about it (`/contact/?type=…&slip=N` fills in the message). "Lift slips" dims every slip without a lift.
+
+Lift slips are set in `LIFTS` at the top of `dockmap.py`: 1, 3, 4, 5, 20, 24, 25, 26, 27, 28, 29. Change the set and rebuild when a lift is added or moved.
 
 ## Openings
 
