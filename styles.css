@@ -167,9 +167,9 @@ p { margin: 0 0 1em; }
 .amen details[open] summary::after { transform: rotate(45deg); background: var(--signal); border-color: var(--signal); color: var(--navy); }
 .amen details p { color: #C5D1DE; margin: -4px 0 20px; max-width: 34em; }
 
-.split__media--grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1.4fr 1fr; gap: 12px; padding: clamp(28px, 4vw, 56px) max(24px, calc((100vw - var(--wrap)) / 2 + 24px)) clamp(28px, 4vw, 56px) 0; min-height: 620px; }
-.split__media--grid > img { position: static; width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); }
-.split__media--grid .g1 { grid-column: 1 / -1; }
+.split__media--grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-content: center; gap: 12px; padding: clamp(28px, 4vw, 56px) max(24px, calc((100vw - var(--wrap)) / 2 + 24px)) clamp(28px, 4vw, 56px) 0; min-height: 0; }
+.split__media--grid > img { position: static; display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
+.split__media--grid > .g1 { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
 .openings { border: 1px solid var(--rule); border-radius: 16px; padding: 16px 20px; margin: 0 0 26px; max-width: 30em; }
 .openings__label { font-weight: 600; margin: 0 0 4px; }
 .openings__list { list-style: none; margin: 0; padding: 0; }
@@ -335,11 +335,12 @@ p { margin: 0 0 1em; }
   .split { grid-template-columns: minmax(0, 1fr); }
   .split__media { min-height: 0; aspect-ratio: 16 / 10; }
   .split__body, .split--light .split__body { padding: 64px max(24px, env(safe-area-inset-right, 0px)) 64px max(24px, env(safe-area-inset-left, 0px)); max-width: none; }
-  .split__media--grid { padding: 0 max(24px, env(safe-area-inset-right, 0px)) 64px max(24px, env(safe-area-inset-left, 0px)); min-height: 0; aspect-ratio: auto; grid-template-rows: 260px 180px; }
+  .split__media--grid { padding: 0 max(24px, env(safe-area-inset-right, 0px)) 8px max(24px, env(safe-area-inset-left, 0px)); min-height: 0; aspect-ratio: auto; gap: 10px; }
   .steps__list { grid-template-columns: minmax(0, 1fr); }
   .steps__n { margin-bottom: 18px; }
   .place__grid, .faq__grid, .contact__grid { grid-template-columns: minmax(0, 1fr); }
   .faq h2 { position: static; }
+  .place { padding-top: 56px; }
   .dock-bar { display: grid; }
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
   .foot__grid { grid-template-columns: 1fr 1fr; }
