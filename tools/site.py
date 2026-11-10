@@ -7,7 +7,8 @@ and in the artifact preview. Run:  python3 site.py            -> /home/claude/bu
 """
 import re, sys, os, math, json
 from dockmap import markup as dockmap
-from areamap import markup as areamap
+from areamap import markup as areamap, teaser as area_teaser
+TEASE_SVG, TEASE_ROWS = area_teaser()
 
 SRC = open('/home/claude/work/index.src.html').read()
 LOGO = re.search(r'<svg class="logo".*?</svg>', SRC, re.S).group(0)
@@ -221,6 +222,21 @@ HOME = f'''<section class="hero" aria-labelledby="hero-title">
       <a href="location/"><span>Location</span><small>Getting here, and where to eat in Eastport</small>{ARROW}</a>
       <a href="faq/"><span>Questions</span><small>The ones we hear on the dock</small>{ARROW}</a>
     </nav>
+  </div>
+</section>
+
+<section class="near" aria-labelledby="near-title">
+  <div class="wrap near__grid">
+    <div class="near__body">
+      <h2 id="near-title">{RULE}A short walk from the dock</h2>
+      <p class="split__lede">Dinner is minutes away in Eastport. Downtown and the Naval Academy are across the Spa Creek bridge.</p>
+      <ul class="near__list">''' + TEASE_ROWS + f'''</ul>
+      <a class="btn btn--navy" href="location/">Explore the area map</a>
+    </div>
+    <a class="near__map" href="location/" aria-label="Open the area map">
+      ''' + TEASE_SVG + f'''
+      <span class="near__tag">Walk times from Butler&#8217;s</span>
+    </a>
   </div>
 </section>
 ''' + CLOSE

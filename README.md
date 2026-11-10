@@ -58,7 +58,7 @@ The burgee unfurls once per visit (sessionStorage `bm-splash`), then lifts away 
 
 ## Pages
 
-- Home: photo hero with the availability bar, a sideways rail of cards (annual slips, boat lifts, overnight, leasing, winter), the "Boutique by design" split and a closing call to action.
+- Home: photo hero with the availability bar, a sideways rail of cards (annual slips, boat lifts, overnight, leasing, winter), the "Boutique by design" split, a preview of the area map with walk times, and a closing call to action.
 - Annual slips: fixed docks, boats 25 to 75 ft, quote on request, waiting list.
 - Boat lifts: boat lifts for 7,000 to 30,000 lbs, jet ski lifts and small tender lifts.
 - Overnight: $4 per foot per night with electricity included, upon availability, in three steps.
@@ -74,7 +74,7 @@ Lift slips are set in `LIFTS` at the top of `dockmap.py`: 1, 3, 4, 5, 20, 24, 25
 
 ## Area map
 
-The Location page has an interactive map of Eastport, downtown and the Naval Academy, drawn from OpenStreetMap data (`tools/areamap.py`). Filter by Eat and drink, Shops, Parks or Landmarks; pick a place and the map zooms to the walking route from 409 Chester Avenue, with the walk time and a link to walking directions in Google Maps. Walk times are shortest paths over the OpenStreetMap street network at 3 mph, so they follow real streets and the Spa Creek bridge.
+The Location page has an interactive map of Eastport, downtown and the Naval Academy, drawn from OpenStreetMap data (`tools/areamap.py`). Filter by Eat and drink, Shops, Parks, Landmarks or Getting around; pick a place and the map zooms to the walking route from 409 Chester Avenue, with the walk time and a link to walking directions in Google Maps. Walk times are shortest paths over the OpenStreetMap street network at 3 mph, so they follow real streets and the Spa Creek bridge.
 
 To add or move a place, edit `PLACES` in `tools/areamap.py` and rebuild. The street and shoreline data is a snapshot pulled November 2026; rebuild from a fresh pull if streets change.
 

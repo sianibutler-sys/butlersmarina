@@ -190,10 +190,13 @@ PLACES = [
     ('eat', 'Vin 909', '909 Bay Ridge Ave', 38.96677, -76.48839),
     ('eat', "Carrol&#8217;s Creek", '410 Severn Ave', 38.97172, -76.48396),
     ('eat', 'Chart House', '300 2nd St', 38.97393, -76.48183),
+    ('eat', 'Forward Brewing', '418 4th St', 38.97096, -76.48218),
     ('shop', 'Leeward Market', '601 2nd St', 38.97033, -76.47780),
     ('shop', 'Eastport Liquors', '1007 Bay Ridge Ave', 38.96524, -76.48846),
     ('shop', 'Annapolis Market House', '25 Market Space', 38.97794, -76.48718),
     ('shop', 'Main Street shops', 'Main St, downtown', 38.97790, -76.48960),
+    ('shop', 'Royal Farms', '424 6th St, convenience store', 38.96902, -76.48398),
+    ('shop', 'Graul&#8217;s Market', '609 Taylor Ave, groceries', 38.98792, -76.50328),
     ('park', 'Horn Point Park', 'Eastport', 38.97315, -76.47658),
     ('park', 'Susan Campbell Park', 'City Dock', 38.97646, -76.48473),
     ('park', 'Truxtun Park', 'Hilltop Ln', 38.96669, -76.50174),
@@ -202,8 +205,11 @@ PLACES = [
     ('see', 'City Dock and Ego Alley', 'Downtown waterfront', 38.97673, -76.48573),
     ('see', 'Annapolis Maritime Museum', '723 2nd St', 38.96890, -76.47633),
     ('see', 'Spa Creek Bridge', '6th St to Compromise St', 38.97271, -76.48549),
+    ('see', 'Eastport Yacht Club', '317 1st St', 38.97496, -76.47961),
+    ('go', 'Annapolis Water Taxi', 'City Dock. Serves Back Creek on demand in season. Call (410) 263-0033 or hail on VHF 68.', 38.97752, -76.48649),
+    ('go', 'Annapolis Visitor Center', '26 West St', 38.97847, -76.49439),
 ]
-CATS = {'eat': 'Eat and drink', 'shop': 'Shops', 'park': 'Parks', 'see': 'Landmarks'}
+CATS = {'eat': 'Eat and drink', 'shop': 'Shops', 'park': 'Parks', 'see': 'Landmarks', 'go': 'Getting around'}
 
 def plain(s):
     return s.replace('&#8217;', "'").replace('&amp;', '&')
@@ -217,7 +223,8 @@ def build():
         x, y = pj(lat, lon)
         miles = m / 1609.344
         mins = max(1, round(miles * 20))
-        q = quote_plus(f'{plain(name)}, {plain(addr)}, Annapolis, MD') if 'downtown' not in addr and 'Gate' not in addr else quote_plus(f'{plain(name)}, Annapolis, MD')
+        street = plain(addr).split(',')[0].split('. ')[0]
+        q = quote_plus(f'{plain(name)}, {street}, Annapolis, MD' if street[:1].isdigit() else f'{plain(name)}, Annapolis, MD')
         places.append(dict(i=i, cat=cat, name=name, addr=addr, x=round(x, 1), y=round(y, 1), mins=mins, mi=round(miles, 1),
                            route=path_d(ln.coords, False, 1), q=q))
     # svg
@@ -262,7 +269,7 @@ def markup():
         items = sorted([p for p in data if p['cat'] == cat], key=lambda p: p['mi'])
         rows.append(f'<li class="am__group" data-cat="{cat}"><p class="am__ghead">{label}</p><ul>' + ''.join(
             f'<li><button type="button" class="am__item am__item--{cat}" data-i="{p["i"]}"><span class="am__name">{p["name"]}</span>'
-            f'<span class="am__addr">{p["addr"]}</span><span class="am__walk">{p["mins"]} min walk</span></button></li>' for p in items) + '</ul></li>')
+            f'<span class="am__addr">{p["addr"].split(". ")[0]}</span><span class="am__walk">{p["mins"]} min walk</span></button></li>' for p in items) + '</ul></li>')
     tabs = ''.join(f'<button type="button" role="radio" data-cat="{c}" aria-checked="{"true" if c == "all" else "false"}">{l}</button>'
                    for c, l in [('all', 'All')] + list(CATS.items()))
     js = json.dumps({'home': [round(home[0], 1), round(home[1], 1)], 'places': data}, separators=(',', ':'))
@@ -291,3 +298,33 @@ if __name__ == '__main__':
     print('bytes', len(m), 'VH', VH)
     _, data, _ = build()
     for p in data: print(p['cat'], p['name'], p['mins'], 'min', p['mi'], 'mi')
+
+TEASE = ["Davis&#8217; Pub", 'Boatyard Bar &amp; Grill', 'City Dock and Ego Alley', 'U.S. Naval Academy', 'Maryland State House']
+def teaser():
+    """A still preview of the area map for the home page."""
+    import re
+    svg, data, home = build()
+    svg = re.sub(r'<g class="am__pin.*?</g>', '', svg)
+    svg = re.sub(r'<g class="am__home.*?</g>', '', svg)
+    svg = svg.replace('<path class="am__route" d=""/>', '')
+    pick = [p for n in TEASE for p in data if p['name'] == n]
+    pts = [(p['x'], p['y']) for p in pick] + [home]
+    x0 = min(x for x, _ in pts); x1 = max(x for x, _ in pts); y0 = min(y for _, y in pts); y1 = max(y for _, y in pts)
+    w, h = (x1 - x0) * 1.5, (y1 - y0) * 1.35
+    if w / h > 4 / 3: h = w * 3 / 4
+    else: w = h * 4 / 3
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    vb = f'{cx - w / 2:.0f} {cy - h / 2:.0f} {w:.0f} {h:.0f}'
+    svg = re.sub(r'viewBox="[^"]*"', f'viewBox="{vb}"', svg, count=1).replace('class="am__svg"', 'class="am__svg amt__svg" style="--s:.45" aria-hidden="true" focusable="false"', 1)
+    svg = svg.replace(' role="img" aria-label="Map of Eastport and downtown Annapolis with nearby places"', '')
+    pins = ''
+    for p in pick:
+        side = 'end' if p['x'] < home[0] - 20 else 'start'
+        dx = -9 if side == 'end' else 9
+        pins += (f'<g class="amt__pin amt__pin--{p["cat"]}" transform="translate({p["x"]} {p["y"]})"><circle r="4.5"/>'
+                 f'<text x="{dx}" y="3.5" text-anchor="{side}">{p["name"]}</text></g>')
+    pins += (f'<g class="amt__home" transform="translate({home[0]:.1f} {home[1]:.1f})"><circle r="8"/>'
+             f'<image href="assets/img/burgee.svg" x="-5.5" y="-3" width="11" height="6"/><text x="0" y="19">Butler&#8217;s</text></g>')
+    svg = svg.replace('</svg>', pins + '</svg>')
+    rows = ''.join(f'<li><span>{p["name"]}</span><span>{p["mins"]} min walk</span></li>' for p in pick)
+    return svg, rows
