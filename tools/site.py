@@ -508,6 +508,11 @@ CONTACT = f'''<section class="contact contact--page" aria-labelledby="page-title
         <input id="f-sms" type="checkbox" name="sms" value="yes">
         <span>Text me about my request and marina updates. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. Consent is not a condition of renting a slip. See our <a href="privacy/">privacy policy</a> and <a href="tc/">messaging terms</a>.</span>
       </label>
+      <label class="inq__sms">
+        <input id="f-news" type="checkbox" name="news" value="yes">
+        <span>Email me marina news, like slip openings and events. Unsubscribe anytime. See our <a href="privacy/">privacy policy</a>.</span>
+      </label>
+      <p class="inq__fine">We&#8217;ll email you a copy of your request. Neither box is required to send it.</p>
       <button class="btn btn--signal inq__send" type="submit">Send request</button>
       <p class="inq__status" id="inqStatus" role="status"></p>
     </form>
@@ -547,6 +552,28 @@ PAGES = [
      'Request an annual slip, a boat lift, overnight dates or a lease at Butler&#8217;s Marina. Or call (410) 626-0051.', CONTACT, '', '', ''),
     ('privacy', None, "SMS privacy policy | Butler's Marina", 'SMS privacy policy for Butler&#8217;s Waterfront &amp; Marina.',
      f'<div class="legal"><div class="wrap">{PRIVACY}</div></div>', '', '', 'legal-page'),
+    ('unsubscribe', None, "Unsubscribe | Butler's Marina", '',
+     '<div class="legal"><div class="wrap"><h1>Unsubscribe</h1><div id="unsub"><p>Stop marina news emails to <strong id="unsubEmail">your address</strong>?</p>'
+     '<p><button class="btn btn--navy" type="button" id="unsubGo">Unsubscribe</button></p>'
+     '<p class="unsub__msg" id="unsubMsg" role="status"></p>'
+     '<p>To stop texts, reply STOP to any text from us. Questions: <a href="mailto:info@butlersmarinaannapolis.com">info@butlersmarinaannapolis.com</a> or (410) 626-0051.</p></div></div></div>',
+     '<meta name="robots" content="noindex">',
+     '''<script>
+(function () {
+  var q = new URLSearchParams(location.search), e = q.get("e") || "", t = q.get("t") || "";
+  var em = document.getElementById("unsubEmail"), go = document.getElementById("unsubGo"), msg = document.getElementById("unsubMsg");
+  if (!e || !t) { go.hidden = true; msg.textContent = "This link is missing details. Email info@butlersmarinaannapolis.com and we\u2019ll take you off the list."; return; }
+  em.textContent = e;
+  go.addEventListener("click", function () {
+    go.disabled = true; msg.textContent = "Updating\u2026";
+    fetch("/api/unsubscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ e: e, t: t }) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; }); })
+      .then(function () { go.hidden = true; msg.textContent = "Done. You won\u2019t get marina news emails at " + e + " anymore."; })
+      .catch(function (j) { go.disabled = false; msg.textContent = (j && j.error) || "That didn\u2019t go through. Try again, or email info@butlersmarinaannapolis.com."; });
+  });
+})();
+</script>
+''', 'legal-page'),
     ('tc', None, "Messaging terms | Butler's Marina", 'Messaging terms for Butler&#8217;s Waterfront &amp; Marina.',
      f'<div class="legal"><div class="wrap">{TC}</div></div>', '', '', 'legal-page'),
 ]

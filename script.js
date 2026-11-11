@@ -355,7 +355,7 @@
       status.className = "inq__status";
       var data = {};
       new FormData(form).forEach(function (v, k) { data[k] = typeof v === "string" ? v.trim() : v; });
-      data.sms = form.sms.checked ? "yes" : "no";
+      data.sms = form.sms.checked ? "yes" : "no"; data.news = form.news.checked ? "yes" : "no";
       var errs = rules(data), n = Object.keys(errs).length;
       if (n) {
         var first = showErrs(errs);
