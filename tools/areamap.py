@@ -1,6 +1,7 @@
 """Interactive area map for the Location page, drawn from OpenStreetMap data.
 Walking distances come from shortest paths over the OSM street network (3 mph)."""
 import json, math, heapq
+from compass import compass
 from shapely.geometry import LineString, Polygon, Point, box, MultiLineString
 from shapely.ops import linemerge, split, unary_union, nearest_points
 
@@ -281,6 +282,7 @@ def markup():
       <div class="am__zoom">
         <button type="button" data-zoom="home" aria-label="Show the whole area">Whole area</button>
       </div>
+      <svg class="am__compass" viewBox="-60 -60 120 120" aria-hidden="true">''' + compass(0, 0, 36, label_size=15) + f'''</svg>
       <p class="am__credit">Map data &#169; OpenStreetMap contributors. Not for navigation.</p>
     </div>
     <div class="am__side">

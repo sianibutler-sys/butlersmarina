@@ -2,6 +2,9 @@
 Slip rectangles come from the scanned plat (plat/rects.json, 200 dpi, 1" = 20'), rotated so the
 main pier runs left to right. Two orientations are emitted: wide for desktop, tall for phones."""
 import json, math
+from compass import compass
+# true north on the wide map: the main pier runs out at a bearing of about 141 degrees
+NORTH_H = -51
 
 R = {int(k): v for k, v in json.load(open('/home/claude/work/plat/rects.json')).items()}
 LIFTS = {1, 3, 4, 5, 6, 7, 20, 24, 25, 26, 27, 28, 29}
@@ -123,6 +126,10 @@ def build(orient):
         out += [lab('Back Creek', (-1250, 640), 'dm__label dm__label--water'),
                 lab('Parking', (PARK[0], PARK[1] + 120)), lab('Fire pit', (FIRE[0] - 50, FIRE[1])),
                 lab('Mixed-use building', (-530, by - 80), anchor='start')]
+    if orient == 'h':
+        out.append(compass(1300, -1120, 88, north=NORTH_H, label_size=34))
+    else:
+        out.append(compass(1190, 1270, 88, north=NORTH_H + 90, label_size=38))
     out.append('</svg>')
     return ''.join(out)
 

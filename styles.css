@@ -520,6 +520,19 @@ p { margin: 0 0 1em; }
 @media (max-width: 1020px) { .near__grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 600px) { .amt__pin text, .amt__home text { font-size: 17px; stroke-width: 4px; } .amt__pin circle { r: 6; } .amt__home circle { r: 11; } .near__map .am__svg { aspect-ratio: 1 / 1; } }
 
+/* Compass rose, after the one on the marina's plat */
+.compass__a { fill: var(--navy); }
+.compass__b { fill: var(--signal); }
+.compass__d1 { fill: var(--navy); opacity: .55; }
+.compass__d2 { fill: #fff; stroke: var(--navy); stroke-width: 1; stroke-opacity: .4; }
+.compass__hub { fill: #fff; stroke: var(--navy); stroke-width: 1.5; }
+.compass__l { font-family: var(--serif); fill: var(--navy); }
+.compass__n { fill: var(--signal-ink); font-weight: 600; }
+.am__compass, .near__compass { position: absolute; width: 124px; height: 124px; pointer-events: none; }
+.am__compass { right: 10px; bottom: 24px; }
+.near__compass { right: 8px; top: 6px; }
+@media (max-width: 600px) { .am__compass, .near__compass { width: 84px; height: 84px; } }
+
 /* Splash: the burgee goes up once per visit */
 .splash { display: none; }
 .splash-on .splash { display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; background: #fff; animation: leave .7s cubic-bezier(.7,0,.2,1) 1.95s forwards; }

@@ -7,6 +7,7 @@ and in the artifact preview. Run:  python3 site.py            -> /home/claude/bu
 """
 import re, sys, os, math, json
 from dockmap import markup as dockmap
+from compass import compass
 from areamap import markup as areamap, teaser as area_teaser
 TEASE_SVG, TEASE_ROWS = area_teaser()
 
@@ -235,6 +236,7 @@ HOME = f'''<section class="hero" aria-labelledby="hero-title">
     </div>
     <a class="near__map" href="location/" aria-label="Open the area map">
       ''' + TEASE_SVG + f'''
+      <svg class="near__compass" viewBox="-60 -60 120 120" aria-hidden="true">''' + compass(0, 0, 36, label_size=15) + f'''</svg>
       <span class="near__tag">Walk times from Butler&#8217;s</span>
     </a>
   </div>
@@ -245,14 +247,14 @@ SLIPS = phero('Annual slips', 'Make Butler&#8217;s your home port. Fixed docks f
 <section class="split split--light" aria-labelledby="slip-title">
   <div class="split__body">
     <h2 id="slip-title">{RULE}What comes with a slip</h2>
-    <p class="split__lede">Annual slips are priced by slip. Send your boat&#8217;s length, beam and draft and we&#8217;ll match you to one and send a quote.</p>
+    <p class="split__lede">Send your boat&#8217;s length, beam and draft. We&#8217;ll find the slip that fits and send you a price.</p>
     <dl class="facts">
       <div><dt>Boats</dt><dd>25 to 75 ft</dd></div>
       <div><dt>Docks</dt><dd>29 fixed slips, thirteen with lifts</dd></div>
       <div><dt>Winter</dt><dd>In the water all year, with de-icing</dd></div>
       <div><dt>Lifts</dt><dd>7,000&#8211;30,000 lbs, plus jet ski and tender lifts</dd></div>
-      <div><dt>Ashore</dt><dd>Full bathroom, washer and dryer</dd></div>
-      <div><dt>Also</dt><dd>Wi-Fi, cable, parking</dd></div>
+      <div><dt>Power</dt><dd>Electric metered at each slip</dd></div>
+      <div><dt>Ashore</dt><dd>Bathroom, laundry, Wi-Fi, parking</dd></div>
     </dl>
     <p class="note">If we&#8217;re full, we&#8217;ll add you to the waiting list and call when a slip opens.</p>
     <div class="split__cta">
@@ -352,6 +354,7 @@ AMEN_ITEMS = [
     ('Fixed docks and lifts', 'Fixed docks throughout. Boat lifts from 7,000 to 30,000 lbs, plus jet ski and small tender lifts. <a href="lifts/">See the lifts</a>'),
     ('Winter de-icing', 'The water stays open around the docks all winter, so your boat can stay in all year.'),
     ('Fire pit and grills', 'A fire pit with sitting areas, and grills on the grounds.'),
+    ('Electric at every slip', 'Each slip has its own electric meter. Overnight stays include electricity in the nightly rate.'),
     ('Wi-Fi and cable', 'Connected at the slips.'),
     ('Off-street parking', 'Parking on the property, off Chester Avenue.'),
 ]
@@ -449,6 +452,7 @@ FAQS = [
     ('Can my boat stay in the water over the winter?', 'Yes. De-icers keep the water open around the docks all winter.'),
     ('How does overnight dockage work?', '$4 per foot per night, with electricity and every amenity included. Overnight dockage is upon availability, so reserve ahead if you can. Check in from 1:00 PM. Check out by 11:00 AM.'),
     ('Is there a waiting list?', 'Yes, for annual slips and overnight dockage. Ask to join it on the <a href="contact/">request form</a> and we&#8217;ll call when a slip opens.'),
+    ('How is electric billed?', 'Each slip is metered individually, so annual slip holders pay for what their slip uses. Overnight stays include electricity in the $4 per foot rate.'),
     ('Is there a bathroom and laundry for slip holders?', 'Yes. A full bathroom and a washer and dryer in the mixed-use building on the property.'),
     ('Do you lease residential or office space?', 'Yes. The mixed-use building on the property has residential and office space available for long term lease. Openings are posted on the <a href="leasing/">leasing page</a>.'),
     ('When did Butler&#8217;s open?', 'In 1998, founded by Marcellous and Pier Butler.'),
@@ -530,7 +534,7 @@ PAGES = [
     ('overnight', 'overnight/', "Overnight dockage | Butler's Marina, Annapolis",
      'Overnight and transient dockage in Annapolis at $4 per foot per night, electricity included, upon availability.', OVERNIGHT, '', '', ''),
     ('amenities', 'amenities/', "Amenities | Butler's Marina, Annapolis",
-     'Full bathroom and laundry, fixed docks and lifts, winter de-icing, fire pit and grills, Wi-Fi and off-street parking.', AMENITIES, '', '', ''),
+     'Full bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and off-street parking.', AMENITIES, '', '', ''),
     ('leasing', 'leasing/', "Residential and office leasing | Butler's Marina, Annapolis",
      'Long term residential and office space leasing in the mixed-use building at Butler&#8217;s Marina, Eastport, Annapolis.', LEASING, '', '', ''),
     ('location', 'location/', "Location | Butler's Marina, Eastport, Annapolis",
