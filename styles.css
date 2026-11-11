@@ -656,7 +656,8 @@ p { margin: 0 0 1em; }
   .logo { width: 214px; }
   .bar.is-solid .logo { width: 196px; }
   .bar__cta { display: none; }
-  .bar__menu { margin-left: auto; }
+  .bar__search { margin-left: auto; padding: 0; width: 44px; justify-content: center; }
+  .bar__menu { margin-left: -6px; }
   .hero { min-height: 0; }
   .hero__inner { padding-top: 132px; padding-bottom: 28px; }
   .rail__track { grid-auto-columns: 84%; gap: 16px; }
