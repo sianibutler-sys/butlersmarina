@@ -1,10 +1,10 @@
 // Cloudflare Pages Function: POST /api/inquiry
-// Writes a slip, lift, overnight or leasing request to Airtable.
+// Sends a slip, lift, overnight or leasing request to the marina's Google Sheet.
+// The sheet runs a small Apps Script (tools/sheets-inquiry.gs) that adds the row
+// and emails info@butlersmarinaannapolis.com.
 // Set these in Cloudflare Pages > Settings > Variables and secrets:
-//   AIRTABLE_TOKEN  personal access token with data.records:write on the base
-//   AIRTABLE_BASE   base ID, starts with "app"
-//   AIRTABLE_TABLE  table name or ID, e.g. "Requests"
-// An Airtable automation on new records emails info@butlersmarinaannapolis.com.
+//   SHEETS_URL     the Apps Script web app URL (ends in /exec)
+//   SHEETS_SECRET  the same secret written in the script
 
 const TYPES = ['Annual slip', 'Boat lift', 'Overnight stay', 'Residential lease', 'Office lease'];
 
@@ -21,36 +21,44 @@ export async function onRequestPost({ request, env }) {
   if (!data.name || !data.email || !TYPES.includes(data.type)) {
     return json({ error: 'Type, name and email are required' }, 400);
   }
-  if (!env.AIRTABLE_TOKEN || !env.AIRTABLE_BASE || !env.AIRTABLE_TABLE) {
+  if (!env.SHEETS_URL || !env.SHEETS_SECRET) {
     return json({ error: 'Form not configured' }, 503);
   }
 
-  const fields = {
-    Name: clip(data.name, 120),
-    Email: clip(data.email, 160),
-    Phone: clip(data.phone, 40),
-    Type: data.type,
-    Boat: clip(data.boat, 160),
-    Message: clip(data.message, 4000),
-    'SMS consent': data.sms === 'yes',
-    Status: 'New'
+  const num = (v) => {
+    const n = parseFloat(v);
+    return Number.isFinite(n) && n > 0 ? n : '';
   };
-  for (const [key, field] of [['loa', 'Length (ft)'], ['beam', 'Beam (ft)'], ['draft', 'Draft (ft)']]) {
-    const n = parseFloat(data[key]);
-    if (Number.isFinite(n) && n > 0) fields[field] = n;
-  }
-  if (isDate(data.arrive)) fields.Arriving = data.arrive;
-  if (isDate(data.depart)) fields.Leaving = data.depart;
+  const row = {
+    secret: env.SHEETS_SECRET,
+    received: new Date().toISOString(),
+    type: data.type,
+    name: clip(data.name, 120),
+    email: clip(data.email, 160),
+    phone: clip(data.phone, 40),
+    boat: clip(data.boat, 160),
+    loa: num(data.loa),
+    beam: num(data.beam),
+    draft: num(data.draft),
+    arrive: isDate(data.arrive) ? data.arrive : '',
+    depart: isDate(data.depart) ? data.depart : '',
+    message: clip(data.message, 4000),
+    sms: data.sms === 'yes' ? 'Yes' : 'No',
+    page: clip(request.headers.get('Referer') || '', 300)
+  };
 
-  const res = await fetch(
-    `https://api.airtable.com/v0/${env.AIRTABLE_BASE}/${encodeURIComponent(env.AIRTABLE_TABLE)}`,
-    {
+  let ok = false;
+  try {
+    const res = await fetch(env.SHEETS_URL, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${env.AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ records: [{ fields }], typecast: true })
-    }
-  );
-  if (!res.ok) return json({ error: 'Could not save request' }, 502);
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(row),
+      redirect: 'follow'
+    });
+    const out = await res.json().catch(() => ({}));
+    ok = res.ok && out.ok === true;
+  } catch {}
+  if (!ok) return json({ error: 'Could not save request' }, 502);
   return json({ ok: true });
 }
 
