@@ -248,13 +248,13 @@ SLIPS = phero('Annual slips', 'Make Butler&#8217;s your home port. Fixed docks f
     <p class="split__lede">Annual slips are priced by slip. Send your boat&#8217;s length, beam and draft and we&#8217;ll match you to one and send a quote.</p>
     <dl class="facts">
       <div><dt>Boats</dt><dd>25 to 75 ft</dd></div>
-      <div><dt>Docks</dt><dd>29 fixed slips, eleven with lifts</dd></div>
+      <div><dt>Docks</dt><dd>29 fixed slips, thirteen with lifts</dd></div>
       <div><dt>Winter</dt><dd>In the water all year, with de-icing</dd></div>
       <div><dt>Lifts</dt><dd>7,000&#8211;30,000 lbs, plus jet ski and tender lifts</dd></div>
       <div><dt>Ashore</dt><dd>Full bathroom, washer and dryer</dd></div>
       <div><dt>Also</dt><dd>Wi-Fi, cable, parking</dd></div>
     </dl>
-    <p class="note">Slips fill up. If none fits your boat right now, we&#8217;ll add you to the waiting list and call when one opens.</p>
+    <p class="note">If we&#8217;re full, we&#8217;ll add you to the waiting list and call when a slip opens.</p>
     <div class="split__cta">
       <a class="btn btn--navy" href="{q('Annual slip')}">Request a quote</a>
       <a class="btn btn--line" href="lifts/">See the lifts</a>
@@ -311,7 +311,7 @@ LIFTS = phero('Boat lifts', 'Lifts for boats from 7,000 to 30,000 lbs, plus jet 
   <div class="wrap">
     <div class="steps__head">
       <h2 id="map-title">{RULE}Where the lifts are</h2>
-      <p>Eleven slips have lifts, along the main pier and the shore walk. Tap one to see where it sits.</p>
+      <p>Thirteen slips have lifts, along the main pier and the shore walk. Tap one to see where it sits.</p>
     </div>
     ''' + dockmap('lifts') + '''
   </div>
@@ -444,7 +444,7 @@ LOCATION = phero('On the Eastport peninsula', 'Boatyards, sail lofts and good fo
 FAQS = [
     ('What size boats fit?', 'Boats from 25 to 75 feet. Send us your length, beam and draft and we&#8217;ll match you to a slip.'),
     ('What does an annual slip cost?', f'It depends on the slip. <a href="{q("Annual slip")}">Request a quote</a> or call {PHONE}.'),
-    ('How many slips are there?', 'Twenty-nine, and eleven of them have lifts. See them on the <a href="slips/#dock-map">dock map</a>.'),
+    ('How many slips are there?', 'Twenty-nine, and thirteen of them have lifts. See them on the <a href="slips/#dock-map">dock map</a>.'),
     ('Are the docks floating or fixed?', 'Fixed. Every dock at Butler&#8217;s is a fixed dock.'),
     ('Do you have boat lifts?', f'Yes. Boat lifts for 7,000 to 30,000 lbs, plus jet ski lifts and small tender lifts. <a href="{q("Boat lift")}">Ask what&#8217;s open</a>.'),
     ('Can my boat stay in the water over the winter?', 'Yes. De-icers keep the water open around the docks all winter.'),

@@ -4,7 +4,7 @@ main pier runs left to right. Two orientations are emitted: wide for desktop, ta
 import json, math
 
 R = {int(k): v for k, v in json.load(open('/home/claude/work/plat/rects.json')).items()}
-LIFTS = {1, 3, 4, 5, 20, 24, 25, 26, 27, 28, 29}
+LIFTS = {1, 3, 4, 5, 6, 7, 20, 24, 25, 26, 27, 28, 29}
 
 TH = math.atan2(623, -396)
 C, S = math.cos(-TH), math.sin(-TH)
@@ -128,7 +128,7 @@ def build(orient):
 
 def markup(page):
     lifts_first = page == 'lifts'
-    intro = ('Eleven slips have lifts. Tap one to see where it sits.' if lifts_first
+    intro = ('Thirteen slips have lifts. Tap one to see where it sits.' if lifts_first
              else 'Twenty-nine slips off one main pier. Lift slips are marked. Tap any slip for details.')
     return f'''<div class="dm{' dm--lifts' if lifts_first else ''}" data-dockmap>
   <div class="dm__bar">
@@ -152,7 +152,7 @@ def markup(page):
       <p class="dm__pick">Pick a slip on the map.</p>
     </div>
   </div>
-  <p class="dm__note">Drawn from the marina&#8217;s condominium plat. Slip outlines are approximate and not to scale for navigation.</p>
+  <p class="dm__note">Slip outlines are approximate and not to scale for navigation.</p>
 </div>'''
 
 if __name__ == '__main__':

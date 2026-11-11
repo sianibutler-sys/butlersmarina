@@ -63,7 +63,7 @@ The availability bar adapts to what the visitor picks. Overnight shows length, a
 
 The Slips and Lifts pages carry an interactive map of the docks, traced from the 2011 condominium plat (Charles P. Johnson & Associates) and drawn as SVG by `dockmap.py`. Desktop gets a wide view with the main pier running left to right; phones get a tall view. Tap or press Enter on a slip to see where it sits and ask about it (`/contact/?type=…&slip=N` fills in the message). "Lift slips" dims every slip without a lift.
 
-Lift slips are set in `LIFTS` at the top of `dockmap.py`: 1, 3, 4, 5, 20, 24, 25, 26, 27, 28, 29. Change the set and rebuild when a lift is added or moved.
+Lift slips are set in `LIFTS` at the top of `dockmap.py`: 1, 3, 4, 5, 6, 7, 20, 24, 25, 26, 27, 28, 29. Change the set and rebuild when a lift is added or moved.
 
 ## Area map
 
