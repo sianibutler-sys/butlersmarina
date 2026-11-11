@@ -87,14 +87,14 @@
       <div class="inq__grid">
         <label class="f"><span>Name</span><input id="f-name" name="name" autocomplete="name" required></label>
         <label class="f"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" required></label>
-        <label class="f"><span>Phone</span><input id="f-phone" name="phone" type="tel" autocomplete="tel"></label>
-        <label class="f" data-for="boat"><span>Boat name and make</span><input id="f-boat" name="boat"></label>
+        <label class="f"><span>Phone</span><input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(410) 555-0123"></label>
+        <label class="f" data-for="boat"><span>Boat name and make</span><input id="f-boat" name="boat" placeholder="e.g. Blue Heron, Sea Ray 380"></label>
         <label class="f f--s" data-for="boat"><span>Length (ft)</span><input id="f-loa" name="loa" type="number" inputmode="decimal" min="0"></label>
         <label class="f f--s" data-for="boat"><span>Beam (ft)</span><input id="f-beam" name="beam" type="number" inputmode="decimal" min="0"></label>
         <label class="f f--s" data-for="boat"><span>Draft (ft)</span><input id="f-draft" name="draft" type="number" inputmode="decimal" min="0" step="0.1"></label>
         <label class="f" data-for="dates"><span>Arriving</span><input id="f-arrive" name="arrive" type="date"></label>
         <label class="f" data-for="dates"><span>Leaving</span><input id="f-depart" name="depart" type="date"></label>
-        <label class="f f--w"><span id="f-msg-label">Anything else</span><textarea id="f-message" name="message" rows="3"></textarea></label>
+        <label class="f f--w"><span id="f-msg-label">Anything else (optional)</span><textarea id="f-message" name="message" rows="3"></textarea></label>
         <label class="hp" aria-hidden="true">Company website<input name="company_site" tabindex="-1" autocomplete="off"></label>
       </div>
       <label class="inq__sms">

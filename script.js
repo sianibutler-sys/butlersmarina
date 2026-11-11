@@ -213,10 +213,66 @@
 
   /* Request form */
   var form = $("#inquiry"), status = $("#inqStatus");
+  var MSG = {
+    "Annual slip": ["Anything else (optional)", ""],
+    "Overnight stay": ["Anything else (optional)", ""],
+    "Boat lift": ["Boat weight and the lift you need", "e.g. 14,000 lbs, boat lift"],
+    "Residential lease": ["What you’re looking for", "Move-in timing, how long, any questions"],
+    "Office lease": ["What you’re looking for", "Size of team, move-in timing, any questions"]
+  };
   var fieldsFor = function (type) {
+    if (!form) return;
     $$("[data-for]", form).forEach(function (el) {
       el.hidden = !(el.dataset.for === "boat" ? BOAT.test(type) : el.dataset.for === "dates" ? type === "Overnight stay" : true);
     });
+    var m = MSG[type] || MSG["Annual slip"];
+    $("#f-msg-label").textContent = m[0];
+    form.message.placeholder = m[1];
+    clearErrs();
+  };
+
+  /* Validation: the same rules run again on the server */
+  var digits = function (v) { return String(v || "").replace(/\D/g, ""); };
+  var todayISO = function () { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date()); };
+  var rules = function (d) {
+    var e = {}, t = d.type, num = function (k) { return parseFloat(d[k]); };
+    if (!MSG[t]) e.type = "Choose what you’re asking about.";
+    if ((d.name || "").replace(/[^A-Za-zÀ-ÿ]/g, "").length < 2) e.name = "Add your full name.";
+    if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(d.email || "")) e.email = "Add an email we can reply to, like name@example.com.";
+    var ph = digits(d.phone); if (ph.length === 11 && ph[0] === "1") ph = ph.slice(1);
+    if (ph.length !== 10) e.phone = "Add a 10-digit phone number.";
+    if (BOAT.test(t)) {
+      var lo = t === "Boat lift" ? 8 : 25;
+      if ((d.boat || "").trim().length < 2) e.boat = "Add the boat’s name or make.";
+      if (!(num("loa") >= lo && num("loa") <= 75)) e.loa = t === "Boat lift" ? "Length in feet, up to 75." : "Our slips fit 25 to 75 ft.";
+      if (!(num("beam") >= 3 && num("beam") <= 25)) e.beam = "Beam in feet.";
+      if (!(num("draft") >= 0.5 && num("draft") <= 12)) e.draft = "Draft in feet.";
+    }
+    if (t === "Overnight stay") {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d.arrive || "") || d.arrive < todayISO()) e.arrive = "Pick an arrival date, today or later.";
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d.depart || "") || (d.arrive && d.depart <= d.arrive)) e.depart = "Pick a date after you arrive.";
+    }
+    var msg = (d.message || "").trim();
+    if (t === "Boat lift" && msg.length < 4) e.message = "Add the boat’s weight so we can match a lift.";
+    if (/lease/.test(t) && msg.length < 10) e.message = "Tell us a little about what you need.";
+    return e;
+  };
+  var clearErrs = function () {
+    if (!form) return;
+    $$(".f__msg", form).forEach(function (m) { m.remove(); });
+    $$("[aria-invalid]", form).forEach(function (el) { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); });
+  };
+  var showErrs = function (errs) {
+    clearErrs();
+    var first = null;
+    Object.keys(errs).forEach(function (k) {
+      var el = form.elements[k]; if (!el || !el.closest) return;
+      var wrap = el.closest(".f"); if (!wrap || wrap.hidden) return;
+      var m = document.createElement("small"); m.className = "f__msg"; m.id = "err-" + k; m.textContent = errs[k];
+      wrap.appendChild(m); el.setAttribute("aria-invalid", "true"); el.setAttribute("aria-describedby", m.id);
+      if (!first) first = el;
+    });
+    return first;
   };
   var setType = function (type) {
     var r = $('input[name="type"][value="' + type + '"]', form);
@@ -228,8 +284,7 @@
   if (finder) {
     var qType = $("#q-type"), qLoa = $("#q-loa"), qArrive = $("#q-arrive"), qNights = $("#q-nights");
     var qEst = $("#q-est"), qMath = $("#q-math"), qNote = $("#q-note");
-    var today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-    qArrive.min = today.toISOString().slice(0, 10);
+    qArrive.min = todayISO();
     var show = function () {
       var v = qType.value, slip = BOAT.test(v), night = v === "Overnight stay";
       $$("[data-show]", finder).forEach(function (el) {
@@ -254,7 +309,13 @@
     });
     finder.addEventListener("submit", function (e) {
       var v = qType.value, L = Math.round(+qLoa.value || 0);
-      if (BOAT.test(v) && L && (L < MIN || L > MAX)) { e.preventDefault(); qNote.textContent = "Our slips fit boats 25 to 75 ft. Call (410) 626-0051 and we’ll talk it through."; return; }
+      if (BOAT.test(v) && v !== "Boat lift" && L && (L < MIN || L > MAX)) { e.preventDefault(); qNote.textContent = "Our slips fit boats 25 to 75 ft. Call (410) 626-0051 and we’ll talk it through."; return; }
+      if (v === "Overnight stay") {
+        var A = $("#q-arrive").value, Nn = +$("#q-nights").value;
+        if (A && A < todayISO()) { e.preventDefault(); qNote.textContent = "Pick an arrival date today or later."; $("#q-arrive").focus(); return; }
+        if (!(Nn >= 1 && Nn <= 30)) { e.preventDefault(); qNote.textContent = "Nights should be between 1 and 30. For longer, ask about an annual slip."; return; }
+      }
+      qNote.textContent = "";
       /* send only what applies to this request */
       $$("[data-show]", finder).forEach(function (el) { $$("input", el).forEach(function (i) { i.disabled = el.hidden || !i.value; }); });
       setTimeout(function () { $$("input", finder).forEach(function (i) { i.disabled = false; }); }, 0);
@@ -280,29 +341,41 @@
       if (qs.has("loa") || qs.has("arrive")) form.name.focus({ preventScroll: true });
     }
     $$('input[name="type"]', form).forEach(function (r) { r.addEventListener("change", function () { fieldsFor(r.value); }); });
+    form.arrive.min = form.depart.min = todayISO();
+    form.arrive.addEventListener("change", function () { form.depart.min = form.arrive.value || todayISO(); });
+    form.addEventListener("input", function (ev) {
+      var el = ev.target; if (el.getAttribute("aria-invalid") !== "true") return;
+      var m = $("#err-" + el.name); if (m) m.remove();
+      el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby");
+    });
     $$("a[data-type]").forEach(function (a) { a.addEventListener("click", function () { setType(a.dataset.type); }); });
 
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       status.className = "inq__status";
-      var bad = null;
-      ["name", "email"].forEach(function (n) {
-        var el = form[n];
-        var ok = el.value.trim() && (n !== "email" || /.+@.+\..+/.test(el.value));
-        el.setAttribute("aria-invalid", String(!ok));
-        if (!ok && !bad) bad = el;
-      });
-      if (bad) { status.classList.add("is-err"); status.textContent = "Add your name and a working email so we can reply."; bad.focus(); return; }
       var data = {};
       new FormData(form).forEach(function (v, k) { data[k] = typeof v === "string" ? v.trim() : v; });
       data.sms = form.sms.checked ? "yes" : "no";
+      var errs = rules(data), n = Object.keys(errs).length;
+      if (n) {
+        var first = showErrs(errs);
+        status.classList.add("is-err");
+        status.textContent = n === 1 ? "One thing to fix before sending." : n + " things to fix before sending.";
+        if (first) first.focus();
+        return;
+      }
+      clearErrs();
       var btn = $(".inq__send", form);
       btn.disabled = true;
       status.textContent = "Sending…";
       fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
-        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw j; return j; }); })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); })
         .then(function () { form.reset(); fieldsFor("Annual slip"); status.textContent = "Request sent. We’ll be in touch soon."; })
-        .catch(function () {
+        .catch(function (j) {
+          if (j && j.status === 400 && j.fields) {
+            var first = showErrs(j.fields); status.classList.add("is-err");
+            status.textContent = "Check the highlighted fields."; if (first) first.focus(); return;
+          }
           var lines = ["Type: " + data.type, "Name: " + data.name, "Email: " + data.email];
           ["phone", "boat", "loa", "beam", "draft", "arrive", "depart", "message"].forEach(function (k) { if (data[k]) lines.push(k[0].toUpperCase() + k.slice(1) + ": " + data[k]); });
           var href = "mailto:info@butlersmarinaannapolis.com?subject=" + encodeURIComponent(data.type + " request") + "&body=" + encodeURIComponent(lines.join("\n"));
