@@ -56,10 +56,29 @@
     <a href="../faq/" aria-current="page" class="is-here">FAQ</a>
     <a class="bar__navphone" href="tel:+14106260051">Call (410) 626-0051</a>
   </nav>
+  <button class="bar__search" type="button" aria-label="Search the site" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
   <a class="bar__call" href="tel:+14106260051">(410) 626-0051</a>
   <a class="btn btn--signal bar__cta" href="../contact/">Request a slip</a>
   <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Menu</span><span class="bar__lines" aria-hidden="true"></span></button>
 </header>
+
+<div class="srch" id="srch" hidden>
+  <div class="srch__scrim" data-search-close></div>
+  <div class="srch__panel" role="dialog" aria-modal="true" aria-label="Search the site">
+    <div class="srch__inner">
+      <form class="srch__form" role="search" onsubmit="return false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <label class="sr" for="srchQ">Search the site</label>
+        <input id="srchQ" type="search" placeholder="Search slips, lifts, rates, places" autocomplete="off" spellcheck="false" aria-controls="srchList" aria-autocomplete="list">
+        <button class="srch__close" type="button" data-search-close aria-label="Close search">Close</button>
+      </form>
+      <ul class="srch__list" id="srchList" role="listbox" aria-label="Results"></ul>
+      <p class="srch__empty" id="srchEmpty" hidden>Nothing matches that. Call (410) 626-0051 and we&#8217;ll help.</p>
+      <p class="srch__hint" id="srchHint">Try <button type="button" data-q="electric">electric</button>, <button type="button" data-q="lift">lift</button>, <button type="button" data-q="winter">winter</button>, <button type="button" data-q="parking">parking</button> or <button type="button" data-q="State House">State House</button>.</p>
+      <a id="siteRoot" href="../" hidden></a>
+    </div>
+  </div>
+</div>
 
 <main id="main">
 <section class="phero phero--navy" aria-labelledby="page-title">
@@ -72,9 +91,16 @@
 
 <section class="faq" aria-label="Questions and answers">
   <div class="wrap faq__one">
-    <div class="faq__list">
-      <details><summary>What size boats fit?</summary><p>Boats from 25 to 75 feet. Send us your length, beam and draft and we&#8217;ll match you to a slip.</p></details><details><summary>What does an annual slip cost?</summary><p>It depends on the slip. <a href="../contact/?type=Annual+slip">Request a quote</a> or call (410) 626-0051.</p></details><details><summary>How many slips are there?</summary><p>Twenty-nine, and thirteen of them have lifts. See them on the <a href="../slips/#dock-map">dock map</a>.</p></details><details><summary>Are the docks floating or fixed?</summary><p>Fixed. Every dock at Butler&#8217;s is a fixed dock.</p></details><details><summary>Do you have boat lifts?</summary><p>Yes. Boat lifts for 7,000 to 30,000 lbs, plus jet ski lifts and small tender lifts. <a href="../contact/?type=Boat+lift">Ask what&#8217;s open</a>.</p></details><details><summary>Can my boat stay in the water over the winter?</summary><p>Yes. De-icers keep the water open around the docks all winter.</p></details><details><summary>How does overnight dockage work?</summary><p>$4 per foot per night, with electricity and every amenity included. Overnight dockage is upon availability, so reserve ahead if you can. Check in from 1:00 PM. Check out by 11:00 AM.</p></details><details><summary>Is there a waiting list?</summary><p>Yes, for annual slips and overnight dockage. Ask to join it on the <a href="../contact/">request form</a> and we&#8217;ll call when a slip opens.</p></details><details><summary>How is electric billed?</summary><p>Each slip is metered individually, so annual slip holders pay for what their slip uses. Overnight stays include electricity in the $4 per foot rate.</p></details><details><summary>Is there a bathroom and laundry for slip holders?</summary><p>Yes. A full bathroom and a washer and dryer in the mixed-use building on the property.</p></details><details><summary>Do you lease residential or office space?</summary><p>Yes. The mixed-use building on the property has residential and office space available for long term lease. Openings are posted on the <a href="../leasing/">leasing page</a>.</p></details><details><summary>When did Butler&#8217;s open?</summary><p>In 1998, founded by Marcellous and Pier Butler.</p></details><details><summary>Do you send texts?</summary><p>Only if you opt in. Read our <a href="../privacy/">SMS privacy policy</a> and <a href="../tc/">messaging terms</a>.</p></details>
+    <div class="faq__search" role="search">
+      <label class="sr" for="faqQ">Search questions</label>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="faqQ" type="search" placeholder="Search questions, like electric or winter" autocomplete="off">
     </div>
+    <p class="faq__count" id="faqCount" role="status"></p>
+    <div class="faq__list">
+      <details id="q-what-size-boats-fit"><summary>What size boats fit?</summary><p>Boats from 25 to 75 feet. Send us your length, beam and draft and we&#8217;ll match you to a slip.</p></details><details id="q-what-does-an-annual-slip-cost"><summary>What does an annual slip cost?</summary><p>It depends on the slip. <a href="../contact/?type=Annual+slip">Request a quote</a> or call (410) 626-0051.</p></details><details id="q-how-many-slips-are-there"><summary>How many slips are there?</summary><p>Twenty-nine, and thirteen of them have lifts. See them on the <a href="../slips/#dock-map">dock map</a>.</p></details><details id="q-are-the-docks-floating-or-fixed"><summary>Are the docks floating or fixed?</summary><p>Fixed. Every dock at Butler&#8217;s is a fixed dock.</p></details><details id="q-do-you-have-boat-lifts"><summary>Do you have boat lifts?</summary><p>Yes. Boat lifts for 7,000 to 30,000 lbs, plus jet ski lifts and small tender lifts. <a href="../contact/?type=Boat+lift">Ask what&#8217;s open</a>.</p></details><details id="q-can-my-boat-stay-in-the-water-over-the-winter"><summary>Can my boat stay in the water over the winter?</summary><p>Yes. De-icers keep the water open around the docks all winter.</p></details><details id="q-how-does-overnight-dockage-work"><summary>How does overnight dockage work?</summary><p>$4 per foot per night, with electricity and every amenity included. Overnight dockage is upon availability, so reserve ahead if you can. Check in from 1:00 PM. Check out by 11:00 AM.</p></details><details id="q-is-there-a-waiting-list"><summary>Is there a waiting list?</summary><p>Yes, for annual slips and overnight dockage. Ask to join it on the <a href="../contact/">request form</a> and we&#8217;ll call when a slip opens.</p></details><details id="q-how-is-electric-billed"><summary>How is electric billed?</summary><p>Each slip is metered individually, so annual slip holders pay for what their slip uses. Overnight stays include electricity in the $4 per foot rate.</p></details><details id="q-is-there-a-bathroom-and-laundry-for-slip-holders"><summary>Is there a bathroom and laundry for slip holders?</summary><p>Yes. A full bathroom and a washer and dryer in the mixed-use building on the property.</p></details><details id="q-do-you-lease-residential-or-office-space"><summary>Do you lease residential or office space?</summary><p>Yes. The mixed-use building on the property has residential and office space available for long term lease. Openings are posted on the <a href="../leasing/">leasing page</a>.</p></details><details id="q-when-did-butlers-open"><summary>When did Butler&#8217;s open?</summary><p>In 1998, founded by Marcellous and Pier Butler.</p></details><details id="q-do-you-send-texts"><summary>Do you send texts?</summary><p>Only if you opt in. Read our <a href="../privacy/">SMS privacy policy</a> and <a href="../tc/">messaging terms</a>.</p></details>
+    </div>
+    <p class="faq__none" id="faqNone" hidden>No question matches that yet. Call (410) 626-0051 or <a href="../contact/">send us a note</a>, and we&#8217;ll answer it.</p>
   </div>
 </section>
 <section class="contact close" aria-labelledby="close-title">

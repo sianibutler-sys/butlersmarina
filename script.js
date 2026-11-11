@@ -155,6 +155,140 @@
     $("[data-zoom=home]", am).addEventListener("click", function () { clear(); showCat("all"); });
     paint(full);
     window.addEventListener("resize", function () { paint(vb); });
+    var qp = new URLSearchParams(location.search).get("place");
+    if (qp !== null && at[qp]) setTimeout(function () { pick(qp); am.scrollIntoView({ block: "start" }); }, 60);
+  }
+
+  /* Search: words and their everyday stand-ins */
+  var SYN = {
+    electric: ["electricity", "power", "metered", "meter", "shore"], power: ["electric", "electricity"],
+    price: ["cost", "rate", "$", "quote", "fee"], cost: ["price", "rate", "$", "quote"], rate: ["price", "cost", "$"],
+    lift: ["lifts", "hoist"], lifts: ["lift"], overnight: ["transient", "night", "nights"], transient: ["overnight"],
+    apartment: ["residential", "lease", "leasing"], office: ["lease", "leasing"], rent: ["lease", "leasing", "slip"],
+    wifi: ["wi-fi", "internet"], internet: ["wi-fi", "wifi"], laundry: ["washer", "dryer"], shower: ["bathroom"],
+    winter: ["de-icing", "ice", "icing"], food: ["eat", "restaurant", "restaurants", "dinner"], eat: ["restaurant", "dinner", "drink"],
+    dinner: ["eat", "restaurant"], drinks: ["drink", "bar"], grocery: ["groceries", "market"], academy: ["naval"], navy: ["naval"],
+    downtown: ["main", "city", "dock"], taxi: ["water"], texts: ["sms", "text"], sms: ["text", "texts"], dog: ["pets"], pets: ["dog"]
+  };
+  var norm = function (v) { return String(v || "").toLowerCase().replace(/[’']/g, "").normalize("NFD").replace(/[̀-ͯ]/g, ""); };
+  var terms = function (q) { return norm(q).split(/[^a-z0-9$]+/).filter(function (w) { return w.length > 1 || w === "$"; }); };
+  var hit = function (hay, w) {
+    if (hay.indexOf(w) > -1) return true;
+    return (SYN[w] || []).some(function (x) { return hay.indexOf(x) > -1; }) || (w.length > 3 && w.slice(-1) === "s" && hay.indexOf(w.slice(0, -1)) > -1);
+  };
+  var escH = function (v) { return String(v).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+  /* FAQ page: filter questions as you type */
+  var faqQ = $("#faqQ");
+  if (faqQ) {
+    var faqs = $$(".faq__list details"), faqCount = $("#faqCount"), faqNone = $("#faqNone");
+    var filterFaq = function () {
+      var ws = terms(faqQ.value), shown = 0;
+      faqs.forEach(function (d) {
+        var hay = norm(d.textContent), ok = ws.every(function (w) { return hit(hay, w); });
+        d.hidden = !ok; if (ok) shown++;
+        if (ws.length) d.open = ok && shown <= 3; else d.open = false;
+      });
+      faqNone.hidden = shown > 0;
+      faqCount.textContent = ws.length ? (shown === 1 ? "1 question" : shown + " questions") : "";
+    };
+    faqQ.addEventListener("input", filterFaq);
+    var openHash = function () {
+      var d = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (d && d.tagName === "DETAILS") { d.open = true; d.scrollIntoView({ block: "center" }); d.classList.add("is-flash"); setTimeout(function () { d.classList.remove("is-flash"); }, 1600); }
+    };
+    openHash(); window.addEventListener("hashchange", openHash);
+  }
+
+  /* Site search in the header */
+  var srch = $("#srch");
+  if (srch) {
+    var sq = $("#srchQ"), list = $("#srchList"), empty = $("#srchEmpty"), hint = $("#srchHint");
+    var rootHref = $("#siteRoot").getAttribute("href"), preview = /index\.html$/.test(rootHref);
+    var root = rootHref.replace(/index\.html$/, "");
+    var link = function (u) {
+      if (!preview) return root + u;
+      var m = u.match(/^([^?#]*)(.*)$/), path = m[1];
+      if (path === "" || /\/$/.test(path)) path += "index.html";
+      return root + path + m[2];
+    };
+    var index = null, sel = -1, lastFocus = null;
+    var load = function () {
+      if (index) return Promise.resolve(index);
+      return fetch(root + "assets/search.json").then(function (r) { return r.json(); }).then(function (d) {
+        index = d.map(function (e) { return { e: e, t: norm(e.t), s: norm(e.s), x: norm(e.x) }; });
+        return index;
+      });
+    };
+    var mark = function (text, ws) {
+      var out = escH(text);
+      ws.forEach(function (w) { if (w.length < 2) return; out = out.replace(new RegExp("(" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"), "<mark>$1</mark>"); });
+      return out;
+    };
+    var snippet = function (x, ws) {
+      var low = norm(x), at = -1;
+      ws.some(function (w) { at = low.indexOf(w); return at > -1; });
+      if (at < 0 || x.length < 150) return x.slice(0, 150) + (x.length > 150 ? "…" : "");
+      var start = Math.max(0, at - 50);
+      return (start ? "…" : "") + x.slice(start, start + 150) + (start + 150 < x.length ? "…" : "");
+    };
+    var run = function () {
+      var ws = terms(sq.value);
+      hint.hidden = ws.length > 0; sel = -1;
+      if (!ws.length) { list.innerHTML = ""; empty.hidden = true; return; }
+      load().then(function (idx) {
+        var res = [];
+        idx.forEach(function (r) {
+          var score = 0;
+          var all = ws.every(function (w) {
+            var inT = hit(r.t, w), inS = hit(r.s, w), inX = hit(r.x, w);
+            if (inT) score += r.t.indexOf(w) === 0 ? 8 : 6; if (inS) score += 2; if (inX) score += 1;
+            return inT || inS || inX;
+          });
+          if (all) { if (r.e.s === "Question") score += 1; res.push({ r: r, score: score }); }
+        });
+        res.sort(function (a, b) { return b.score - a.score; });
+        res = res.slice(0, 8);
+        empty.hidden = res.length > 0;
+        list.innerHTML = res.map(function (o, i) {
+          var e = o.r.e;
+          return '<li role="option" id="srch-' + i + '"><a href="' + escH(link(e.u)) + '"><span class="srch__kind">' + escH(e.s) + '</span><span class="srch__title">' + mark(e.t, ws) + '</span><span class="srch__text">' + mark(snippet(e.x, ws), ws) + "</span></a></li>";
+        }).join("");
+      });
+    };
+    var openS = function () {
+      lastFocus = document.activeElement;
+      srch.hidden = false; document.documentElement.classList.add("srch-on");
+      $$("[data-search-open]").forEach(function (b) { b.setAttribute("aria-expanded", "true"); });
+      sq.focus(); sq.select(); load();
+    };
+    var closeS = function () {
+      srch.hidden = true; document.documentElement.classList.remove("srch-on");
+      $$("[data-search-open]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+    var move = function (d) {
+      var items = $$("li", list); if (!items.length) return;
+      sel = (sel + d + items.length) % items.length;
+      items.forEach(function (li, i) { li.classList.toggle("is-sel", i === sel); });
+      sq.setAttribute("aria-activedescendant", items[sel].id);
+      items[sel].scrollIntoView({ block: "nearest" });
+    };
+    $$("[data-search-open]").forEach(function (b) { b.addEventListener("click", openS); });
+    $$("[data-search-close]", srch).forEach(function (b) { b.addEventListener("click", closeS); });
+    $$("[data-q]", srch).forEach(function (b) { b.addEventListener("click", function () { sq.value = b.dataset.q; run(); sq.focus(); }); });
+    sq.addEventListener("input", run);
+    sq.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); move(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
+      else if (e.key === "Enter") { var items = $$("li a", list); var a = items[sel > -1 ? sel : 0]; if (a) location.href = a.href; }
+    });
+    list.addEventListener("click", function (e) { if (e.target.closest("a")) closeS(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !srch.hidden) { closeS(); return; }
+      var tag = (e.target.tagName || "").toLowerCase();
+      if (e.key === "/" && srch.hidden && !/input|textarea|select/.test(tag)) { e.preventDefault(); openS(); }
+    });
   }
 
   /* Card rail */

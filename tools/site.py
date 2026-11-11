@@ -459,12 +459,23 @@ FAQS = [
     ('When did Butler&#8217;s open?', 'In 1998, founded by Marcellous and Pier Butler.'),
     ('Do you send texts?', 'Only if you opt in. Read our <a href="privacy/">SMS privacy policy</a> and <a href="tc/">messaging terms</a>.'),
 ]
+def slug(t):
+    t = re.sub(r'&#\d+;|&\w+;', '', t)
+    return 'q-' + re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')[:48]
+
 FAQ = phero('Questions we hear on the dock', f'Don&#8217;t see yours? Call {PHONE} or <a href="contact/">send us a note</a>.') + f'''
 <section class="faq" aria-label="Questions and answers">
   <div class="wrap faq__one">
-    <div class="faq__list">
-      {''.join(f'<details><summary>{a}</summary><p>{b}</p></details>' for a, b in FAQS)}
+    <div class="faq__search" role="search">
+      <label class="sr" for="faqQ">Search questions</label>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="faqQ" type="search" placeholder="Search questions, like electric or winter" autocomplete="off">
     </div>
+    <p class="faq__count" id="faqCount" role="status"></p>
+    <div class="faq__list">
+      {''.join(f'<details id="{slug(a)}"><summary>{a}</summary><p>{b}</p></details>' for a, b in FAQS)}
+    </div>
+    <p class="faq__none" id="faqNone" hidden>No question matches that yet. Call {PHONE} or <a href="contact/">send us a note</a>, and we&#8217;ll answer it.</p>
   </div>
 </section>
 ''' + CLOSE
@@ -638,10 +649,29 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
     {nav}
     <a class="bar__navphone" href="{TEL}">Call {PHONE}</a>
   </nav>
+  <button class="bar__search" type="button" aria-label="Search the site" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
   <a class="bar__call" href="{TEL}">{PHONE}</a>
   <a class="btn btn--signal bar__cta" href="contact/">Request a slip</a>
   <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Menu</span><span class="bar__lines" aria-hidden="true"></span></button>
 </header>
+
+<div class="srch" id="srch" hidden>
+  <div class="srch__scrim" data-search-close></div>
+  <div class="srch__panel" role="dialog" aria-modal="true" aria-label="Search the site">
+    <div class="srch__inner">
+      <form class="srch__form" role="search" onsubmit="return false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <label class="sr" for="srchQ">Search the site</label>
+        <input id="srchQ" type="search" placeholder="Search slips, lifts, rates, places" autocomplete="off" spellcheck="false" aria-controls="srchList" aria-autocomplete="list">
+        <button class="srch__close" type="button" data-search-close aria-label="Close search">Close</button>
+      </form>
+      <ul class="srch__list" id="srchList" role="listbox" aria-label="Results"></ul>
+      <p class="srch__empty" id="srchEmpty" hidden>Nothing matches that. Call {PHONE} and we&#8217;ll help.</p>
+      <p class="srch__hint" id="srchHint">Try <button type="button" data-q="electric">electric</button>, <button type="button" data-q="lift">lift</button>, <button type="button" data-q="winter">winter</button>, <button type="button" data-q="parking">parking</button> or <button type="button" data-q="State House">State House</button>.</p>
+      <a id="siteRoot" href="./" hidden></a>
+    </div>
+  </div>
+</div>
 
 <main id="main">
 {body}
@@ -709,7 +739,45 @@ def rel(html, depth, mode):
         return f'{k}="{v}"'
     return ATTR.sub(sub, html)
 
+def strip(h):
+    h = re.sub(r'<(script|style|svg)\b.*?</\1>', ' ', h, flags=re.S)
+    h = re.sub(r'<[^>]+>', ' ', h)
+    import html as _h
+    return re.sub(r'\s+([.,;:])', r'\1', re.sub(r'\s+', ' ', _h.unescape(h))).strip()
+
+def search_index():
+    from areamap import PLACES, CATS
+    idx = []
+    skip = {'unsubscribe'}
+    for slug_, key, title, desc, body, *_ in PAGES:
+        if slug_ in skip: continue
+        url = (slug_ + '/') if slug_ else ''
+        name = title.split(' | ')[0] if slug_ else "Butler's Marina"
+        if slug_ in ('privacy', 'tc'):
+            idx.append({'t': name, 'u': url, 's': 'Page', 'x': strip(desc)}); continue
+        h1 = re.search(r'<h1[^>]*>(.*?)</h1>', body, re.S)
+        sub = re.search(r'class="phero__sub">(.*?)</p>', body, re.S)
+        idx.append({'t': name if slug_ else "Butler's Marina, home", 'u': url, 's': 'Page', 'x': (strip(h1.group(1)) + ' ' if h1 else '') + strip(desc) + (' ' + strip(sub.group(1)) if sub else '')})
+        if slug_ == 'faq':
+            for q, a in FAQS:
+                idx.append({'t': strip(q), 'u': 'faq/#' + slug(q), 's': 'Question', 'x': strip(a)})
+            continue
+        if slug_ == 'location':
+            for i, (cat, n, addr, *_r) in enumerate(PLACES):
+                idx.append({'t': strip(n), 'u': f'location/?place={i}', 's': CATS[cat], 'x': strip(addr)})
+        # one entry per section heading on the page
+        parts = re.split(r'(<h2\b[^>]*>.*?</h2>)', body, flags=re.S)
+        for j in range(1, len(parts), 2):
+            h = parts[j]; nxt = parts[j + 1] if j + 1 < len(parts) else ''
+            hid = re.search(r'id="([^"]+)"', h)
+            t = strip(h)
+            if not t or t.startswith('Come dock'): continue
+            idx.append({'t': t, 'u': url + ('#' + hid.group(1) if hid else ''), 's': name if slug_ else 'Home', 'x': strip(nxt)[:700]})
+    return idx
+
 def build(out, mode='site'):
+    os.makedirs(os.path.join(out, 'assets'), exist_ok=True)
+    json.dump(search_index(), open(os.path.join(out, 'assets', 'search.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     for p in PAGES:
         slug = p[0]
         depth = 1 if slug else 0

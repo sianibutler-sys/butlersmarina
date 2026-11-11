@@ -56,10 +56,29 @@
     <a href="../faq/">FAQ</a>
     <a class="bar__navphone" href="tel:+14106260051">Call (410) 626-0051</a>
   </nav>
+  <button class="bar__search" type="button" aria-label="Search the site" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
   <a class="bar__call" href="tel:+14106260051">(410) 626-0051</a>
   <a class="btn btn--signal bar__cta" href="../contact/">Request a slip</a>
   <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Menu</span><span class="bar__lines" aria-hidden="true"></span></button>
 </header>
+
+<div class="srch" id="srch" hidden>
+  <div class="srch__scrim" data-search-close></div>
+  <div class="srch__panel" role="dialog" aria-modal="true" aria-label="Search the site">
+    <div class="srch__inner">
+      <form class="srch__form" role="search" onsubmit="return false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <label class="sr" for="srchQ">Search the site</label>
+        <input id="srchQ" type="search" placeholder="Search slips, lifts, rates, places" autocomplete="off" spellcheck="false" aria-controls="srchList" aria-autocomplete="list">
+        <button class="srch__close" type="button" data-search-close aria-label="Close search">Close</button>
+      </form>
+      <ul class="srch__list" id="srchList" role="listbox" aria-label="Results"></ul>
+      <p class="srch__empty" id="srchEmpty" hidden>Nothing matches that. Call (410) 626-0051 and we&#8217;ll help.</p>
+      <p class="srch__hint" id="srchHint">Try <button type="button" data-q="electric">electric</button>, <button type="button" data-q="lift">lift</button>, <button type="button" data-q="winter">winter</button>, <button type="button" data-q="parking">parking</button> or <button type="button" data-q="State House">State House</button>.</p>
+      <a id="siteRoot" href="../" hidden></a>
+    </div>
+  </div>
+</div>
 
 <main id="main">
 <section class="contact contact--page" aria-labelledby="page-title">
