@@ -471,7 +471,7 @@ FAQ = phero('Questions we hear on the dock', f'Don&#8217;t see yours? Call {PHON
   <div class="wrap faq__one">
     <div class="faq__search" role="search">
       <label class="sr" for="faqQ">Search questions</label>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       <input id="faqQ" type="search" placeholder="Search questions, like electric or winter" autocomplete="off">
     </div>
     <p class="faq__count" id="faqCount" role="status"></p>
@@ -652,7 +652,7 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
     {nav}
     <a class="bar__navphone" href="{TEL}">Call {PHONE}</a>
   </nav>
-  <button class="bar__search" type="button" aria-label="Search the site" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
+  <button class="bar__search" type="button" aria-label="Search the site" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
   <a class="bar__call" href="{TEL}">{PHONE}</a>
   <a class="btn btn--signal bar__cta" href="contact/">Request a slip</a>
   <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Menu</span><span class="bar__lines" aria-hidden="true"></span></button>
@@ -663,7 +663,7 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
   <div class="srch__panel" role="dialog" aria-modal="true" aria-label="Search the site">
     <div class="srch__inner">
       <form class="srch__form" role="search" onsubmit="return false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <label class="sr" for="srchQ">Search the site</label>
         <input id="srchQ" type="search" placeholder="Search slips, lifts, rates, places" autocomplete="off" spellcheck="false" aria-controls="srchList" aria-autocomplete="list">
         <button class="srch__close" type="button" data-search-close aria-label="Close search">Close</button>
@@ -780,17 +780,26 @@ def search_index():
 
 def build(out, mode='site'):
     os.makedirs(os.path.join(out, 'assets'), exist_ok=True)
-    json.dump(search_index(), open(os.path.join(out, 'assets', 'search.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+    import hashlib
+    sj = json.dumps(search_index(), ensure_ascii=False, separators=(',', ':'))
+    open(os.path.join(out, 'assets', 'search.json'), 'w').write(sj)
+    # version stamps so browsers fetch fresh CSS, JS and search index after every change
+    REPO = '/home/claude/butlersmarina'
+    ver = lambda b: hashlib.sha1(b).hexdigest()[:8]
+    vcss = ver(open(f'{REPO}/styles.css', 'rb').read()); vjs = ver(open(f'{REPO}/script.js', 'rb').read()); vidx = ver(sj.encode())
+    def stamp(h):
+        return (h.replace('styles.css"', f'styles.css?v={vcss}"', 1).replace('script.js"', f'script.js?v={vjs}"', 1)
+                 .replace('<html lang="en">', f'<html lang="en" data-sv="{vidx}">', 1))
     for p in PAGES:
         slug = p[0]
         depth = 1 if slug else 0
-        html = rel(page(*p), depth, mode)
+        html = stamp(rel(page(*p), depth, mode))
         assert '{{' not in html, slug
         d = os.path.join(out, slug) if slug else out
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, 'index.html'), 'w').write(html)
     if mode == 'site':
-        open(os.path.join(out, '404.html'), 'w').write(rel(page(*NOTFOUND), 0, 'abs'))
+        open(os.path.join(out, '404.html'), 'w').write(stamp(rel(page(*NOTFOUND), 0, 'abs')))
     print('built', out, mode)
 
 if __name__ == '__main__':

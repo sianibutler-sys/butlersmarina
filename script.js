@@ -215,7 +215,7 @@
     var index = null, sel = -1, lastFocus = null;
     var load = function () {
       if (index) return Promise.resolve(index);
-      return fetch(root + "assets/search.json").then(function (r) { return r.json(); }).then(function (d) {
+      return fetch(root + "assets/search.json?v=" + (document.documentElement.getAttribute("data-sv") || "")).then(function (r) { return r.json(); }).then(function (d) {
         index = d.map(function (e) { return { e: e, t: norm(e.t), s: norm(e.s), x: norm(e.x) }; });
         return index;
       });
