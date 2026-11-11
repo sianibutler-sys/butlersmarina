@@ -399,7 +399,6 @@ def maps(name, addr):
 EAT = [("Davis&#8217; Pub", 'Chester Ave at 4th St', 'Chester Ave and 4th St'),
        ('Boatyard Bar &amp; Grill', '400 4th St', '400 4th St'),
        ("Lewnes&#8217; Steakhouse", '401 4th St', '401 4th St'),
-       ("O&#8217;Leary&#8217;s Seafood", '310 3rd St', '310 3rd St'),
        ('Rumhouse', '422 6th St', '422 6th St'),
        ('Vin 909', '909 Bay Ridge Ave', '909 Bay Ridge Ave'),
        ("Carrol&#8217;s Creek", '410 Severn Ave', '410 Severn Ave'),
