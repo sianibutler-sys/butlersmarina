@@ -25,9 +25,13 @@
   <link rel="stylesheet" href="../styles.css?v=4a704fa8">
   <script>
     (function () {
-      var d = document.documentElement, seen = false;
-      try { seen = sessionStorage.getItem("bm-splash") === "1"; } catch (e) {}
-      if (!seen && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("splash-on");
+      // once per visit: marked as seen the moment it shows, in a cookie and in storage, so any page after it skips it
+      var d = document.documentElement, seen = /(^|; )bm_splash=1/.test(document.cookie);
+      try { seen = seen || sessionStorage.getItem("bm-splash") === "1" || Date.now() - (+localStorage.getItem("bm-splash-at") || 0) < 432e5; } catch (e) {}
+      if (seen || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      document.cookie = "bm_splash=1; path=/; max-age=43200; SameSite=Lax";
+      try { sessionStorage.setItem("bm-splash", "1"); localStorage.setItem("bm-splash-at", String(Date.now())); } catch (e) {}
+      d.classList.add("splash-on");
     })();
   </script>
   
