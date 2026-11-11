@@ -7,7 +7,7 @@
 //   SHEETS_SECRET  the same secret written in the script
 // Optional, for the confirmation email sent to the person who asked (through Resend):
 //   RESEND_API_KEY  API key from resend.com, with butlersmarinaannapolis.com verified there
-//   EMAIL_FROM      e.g. Butler's Marina <info@butlersmarinaannapolis.com>
+//   EMAIL_FROM      optional; defaults to Butler's Marina <info@butlersmarinaannapolis.com>
 //   SITE_URL        e.g. https://butlersmarinaannapolis.com (falls back to the address the form was sent from)
 
 const TYPES = ['Annual slip', 'Boat lift', 'Overnight stay', 'Residential lease', 'Office lease'];
@@ -20,7 +20,9 @@ export async function onRequestPost({ request, env, waitUntil }) {
     return json({ error: 'Invalid request' }, 400);
   }
 
-  if (data.company_site) return json({ ok: true }); // honeypot
+  // Hidden field only bots fill in. Never drop silently: a phone's AutoFill can fill it too,
+  // so the request is still saved, flagged in the message, and no confirmation email goes out.
+  const flagged = !!(data.bm_x || data.company_site);
 
   const fields = check(data);
   if (Object.keys(fields).length) return json({ error: 'Some fields need fixing', fields }, 400);
@@ -45,7 +47,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     draft: num(data.draft),
     arrive: isDate(data.arrive) ? data.arrive : '',
     depart: isDate(data.depart) ? data.depart : '',
-    message: clip(data.message, 4000),
+    message: (flagged ? '[Flagged: hidden spam field was filled. Check before replying.] ' : '') + clip(data.message, 4000),
     sms: data.sms === 'yes' ? 'Yes' : 'No',
     news: data.news === 'yes' ? 'Yes' : 'No',
     page: clip(request.headers.get('Referer') || '', 300)
@@ -64,9 +66,9 @@ export async function onRequestPost({ request, env, waitUntil }) {
   } catch {}
   if (!ok) return json({ error: 'Could not save request' }, 502);
 
-  if (env.RESEND_API_KEY && env.EMAIL_FROM) {
+  if (env.RESEND_API_KEY && !flagged) {
     const site = (env.SITE_URL || new URL(request.url).origin).replace(/\/$/, '');
-    const job = sendConfirmation(env, site, row).catch(() => {});
+    const job = sendConfirmation(env, site, row).catch((err) => console.error('confirmation email failed:', err && err.message));
     if (waitUntil) waitUntil(job); else await job;
   }
   return json({ ok: true });
@@ -157,7 +159,7 @@ ${rows.map(([k, v]) => `<tr><td style="${cell}padding:9px 12px 9px 0;border-bott
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: env.EMAIL_FROM,
+      from: env.EMAIL_FROM || "Butler's Marina <info@butlersmarinaannapolis.com>",
       to: [r.email],
       reply_to: 'info@butlersmarinaannapolis.com',
       subject: `We have your request, ${first}`,
@@ -169,7 +171,7 @@ ${rows.map(([k, v]) => `<tr><td style="${cell}padding:9px 12px 9px 0;border-bott
       }
     })
   });
-  if (!res.ok) throw new Error('resend ' + res.status);
+  if (!res.ok) throw new Error('resend ' + res.status + ' ' + (await res.text().catch(() => '')).slice(0, 300));
 }
 
 // The same rules the form checks in the browser, so nothing incomplete gets through.
