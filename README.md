@@ -33,7 +33,7 @@ Until the Sheets variables are set, the form opens the visitor's email app with 
 
 ## Requests sheet (Google Sheets)
 
-Requests land in a Google Sheet the marina team already uses, on a tab named `Requests`. The columns are Received, Type, Name, Email, Phone, Boat, Length (ft), Beam (ft), Draft (ft), Arriving, Leaving, Message, SMS consent, Status, Notes and From page. Status starts as New; the team updates Status and Notes by hand.
+Requests land in a Google Sheet the marina team already uses, on a tab named `Requests`. The columns are Received, Type, Name, Email, Phone, Boat, Length (ft), Beam (ft), Draft (ft), Arriving, Leaving, Message, SMS consent, Status, Notes and From page. Status starts as New and has a dropdown (New, Contacted, Quoted, Booked, Waitlist, Closed); the team updates Status and Notes by hand. The sheet is "Butler's Marina Requests", owned by butlersmarinamgmt@gmail.com. Deploy the script from that account so the notification emails come from the marina.
 
 Setup, once:
 1. Open the sheet, then Extensions > Apps Script. Paste in `tools/sheets-inquiry.gs`.
