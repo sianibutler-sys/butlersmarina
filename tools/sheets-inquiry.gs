@@ -33,18 +33,18 @@ function doPost(e) {
     d.type + ' request from ' + d.name,
     '',
     'Email: ' + d.email,
-    d.phone ? 'Phone: ' + d.phone : '',
-    d.boat ? 'Boat: ' + d.boat : '',
-    d.loa ? 'Length: ' + d.loa + ' ft' : '',
-    d.beam ? 'Beam: ' + d.beam + ' ft' : '',
-    d.draft ? 'Draft: ' + d.draft + ' ft' : '',
-    d.arrive ? 'Arriving: ' + d.arrive : '',
-    d.depart ? 'Leaving: ' + d.depart : '',
-    d.message ? '\n' + d.message : '',
+    d.phone ? 'Phone: ' + d.phone : null,
+    d.boat ? 'Boat: ' + d.boat : null,
+    d.loa ? 'Length: ' + d.loa + ' ft' : null,
+    d.beam ? 'Beam: ' + d.beam + ' ft' : null,
+    d.draft ? 'Draft: ' + d.draft + ' ft' : null,
+    d.arrive ? 'Arriving: ' + d.arrive : null,
+    d.depart ? 'Leaving: ' + d.depart : null,
+    d.message ? '\n' + d.message : null,
     '',
     'Texts OK: ' + d.sms,
     'Sheet: ' + ss.getUrl()
-  ].filter(function (l) { return l !== ''; });
+  ].filter(function (l) { return l !== null; });
   MailApp.sendEmail({ to: NOTIFY, name: "Butler's Marina website", replyTo: d.email,
     subject: 'Website request: ' + d.type + ', ' + d.name, body: lines.join('\n') });
 
