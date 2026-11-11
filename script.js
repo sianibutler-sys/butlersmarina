@@ -168,7 +168,7 @@
     wifi: ["wi-fi", "internet"], internet: ["wi-fi", "wifi"], laundry: ["washer", "dryer"], shower: ["bathroom"],
     winter: ["de-icing", "ice", "icing"], food: ["eat", "restaurant", "restaurants", "dinner"], eat: ["restaurant", "dinner", "drink"],
     dinner: ["eat", "restaurant"], drinks: ["drink", "bar"], grocery: ["groceries", "market"], academy: ["naval"], navy: ["naval"],
-    downtown: ["main", "city", "dock"], taxi: ["water"], texts: ["sms", "text"], sms: ["text", "texts"], dog: ["pets"], pets: ["dog"]
+    downtown: ["main", "city", "dock"], taxi: ["water"], texts: ["sms", "text"], sms: ["text", "texts"], dog: ["pet", "pets", "leash"], dogs: ["pet", "pets", "leash"], cat: ["pet", "pets"], pets: ["pet", "dog", "leash"], car: ["parking", "sticker"], park: ["parking"], fire: ["fire pit"], firepit: ["fire pit"], grill: ["grills"]
   };
   var norm = function (v) { return String(v || "").toLowerCase().replace(/[’']/g, "").normalize("NFD").replace(/[̀-ͯ]/g, ""); };
   var terms = function (q) { return norm(q).split(/[^a-z0-9$]+/).filter(function (w) { return w.length > 1 || w === "$"; }); };
