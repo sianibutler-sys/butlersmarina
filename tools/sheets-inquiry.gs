@@ -18,6 +18,7 @@ function doPost(e) {
   try { d = JSON.parse(e.postData.contents); } catch (err) { return out({ ok: false, error: 'bad json' }); }
   if (!d || d.secret !== SECRET) return out({ ok: false, error: 'forbidden' });
   if (d.action === 'unsubscribe') return unsubscribe(d.email);
+  if (d.action === 'notify') { notify(d, SpreadsheetApp.getActiveSpreadsheet()); return out({ ok: true }); } // backup if Resend fails
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(TAB);
@@ -33,6 +34,12 @@ function doPost(e) {
   sh.appendRow([when, d.type, safe(d.name), safe(d.email), safe(d.phone), safe(d.boat), d.loa, d.beam, d.draft,
     d.arrive, d.depart, safe(d.message), d.sms, 'New', '', d.page, d.news || 'No']);
 
+  // the website sends the team alert through Resend; this only emails when told to
+  if (d.mail === true) notify(d, ss);
+  return out({ ok: true });
+}
+
+function notify(d, ss) {
   const lines = [
     d.type + ' request from ' + d.name,
     '',
@@ -52,8 +59,6 @@ function doPost(e) {
   ].filter(function (l) { return l !== null; });
   MailApp.sendEmail({ to: NOTIFY, name: "Butler's Marina website", replyTo: d.email,
     subject: 'Website request: ' + d.type + ', ' + d.name, body: lines.join('\n') });
-
-  return out({ ok: true });
 }
 
 // Marks every row for this email as unsubscribed from the newsletter and logs it.

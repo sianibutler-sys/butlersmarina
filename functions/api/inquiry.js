@@ -8,6 +8,7 @@
 // Optional, for the confirmation email sent to the person who asked (through Resend):
 //   RESEND_API_KEY  API key from resend.com, with butlersmarinaannapolis.com verified there
 //   EMAIL_FROM      optional; defaults to Butler's Marina <info@butlersmarinaannapolis.com>
+//   NOTIFY_EMAIL    optional; where team alerts go (defaults to info@butlersmarinaannapolis.com)
 //   SITE_URL        e.g. https://butlersmarinaannapolis.com (falls back to the address the form was sent from)
 
 const TYPES = ['Annual slip', 'Boat lift', 'Overnight stay', 'Residential lease', 'Office lease'];
@@ -50,7 +51,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
     message: (flagged ? '[Flagged: hidden spam field was filled. Check before replying.] ' : '') + clip(data.message, 4000),
     sms: data.sms === 'yes' ? 'Yes' : 'No',
     news: data.news === 'yes' ? 'Yes' : 'No',
-    page: clip(request.headers.get('Referer') || '', 300)
+    page: clip(request.headers.get('Referer') || '', 300),
+    mail: !env.RESEND_API_KEY   // the sheet emails the team only when Resend isn't set up
   };
 
   let ok = false;
@@ -66,12 +68,59 @@ export async function onRequestPost({ request, env, waitUntil }) {
   } catch {}
   if (!ok) return json({ error: 'Could not save request' }, 502);
 
-  if (env.RESEND_API_KEY && !flagged) {
+  if (env.RESEND_API_KEY) {
     const site = (env.SITE_URL || new URL(request.url).origin).replace(/\/$/, '');
-    const job = sendConfirmation(env, site, row).catch((err) => console.error('confirmation email failed:', err && err.message));
-    if (waitUntil) waitUntil(job); else await job;
+    // team alert through Resend; if Resend fails, the sheet's script sends it from Google instead
+    const alert = sendAlert(env, row, flagged).catch(async (err) => {
+      console.error('team alert failed:', err && err.message);
+      await fetch(env.SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...row, action: 'notify' }), redirect: 'follow' }).catch(() => {});
+    });
+    const thanks = flagged ? Promise.resolve()
+      : sendConfirmation(env, site, row).catch((err) => console.error('confirmation email failed:', err && err.message));
+    const jobs = Promise.all([alert, thanks]);
+    if (waitUntil) waitUntil(jobs); else await jobs;
   }
   return json({ ok: true });
+}
+
+// ---------- team alert ----------
+
+const SHEET_LINK = 'https://docs.google.com/spreadsheets/d/1o3gkNWv-KvpxRKnnjALoE7WXEeqHg6Fohj-vIKJVkbM/edit';
+
+async function sendAlert(env, r, flagged) {
+  const rows = [
+    ['Request', r.type], ['Name', r.name], ['Email', r.email], ['Phone', r.phone],
+    ['Boat', r.boat], ['Length', r.loa && r.loa + ' ft'], ['Beam', r.beam && r.beam + ' ft'], ['Draft', r.draft && r.draft + ' ft'],
+    ['Arriving', nice(r.arrive)], ['Leaving', nice(r.depart)], ['Message', r.message],
+    ['Texts OK', r.sms], ['Newsletter', r.news], ['From page', r.page]
+  ].filter(([, v]) => v);
+  const text = [`${r.type} request from ${r.name}`, '', ...rows.map(([k, v]) => `${k}: ${v}`), '',
+    'Reply to this email to answer them directly.', `Requests sheet: ${SHEET_LINK}`].join('\n');
+  const navy = '#0D1A2B', muted = '#56677A', rule = '#DCE3E9', cell = 'font-family:Helvetica,Arial,sans-serif;';
+  const html = `<!doctype html><html><body style="margin:0;padding:24px 12px;background:#EEF2F5;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;">
+<tr><td style="${cell}padding:24px 26px 6px;color:${navy};">
+${flagged ? `<p style="margin:0 0 12px;padding:10px 12px;background:#FFF3E8;border-radius:8px;font-size:14px;">Flagged: the hidden spam field was filled. It may be a bot, or a phone's AutoFill. Check before replying.</p>` : ''}
+<p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:${muted};font-weight:bold;">New website request</p>
+<p style="margin:0 0 14px;font-size:20px;">${esc(r.type)}, ${esc(r.name)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${rule};">
+${rows.map(([k, v]) => `<tr><td style="${cell}padding:8px 12px 8px 0;border-bottom:1px solid ${rule};color:${muted};font-size:14px;width:104px;vertical-align:top;">${esc(k)}</td><td style="${cell}padding:8px 0;border-bottom:1px solid ${rule};color:${navy};font-size:15px;white-space:pre-wrap;">${esc(v)}</td></tr>`).join('')}
+</table>
+<p style="margin:16px 0 22px;font-size:14px;color:${muted};">Reply to this email to answer ${esc(r.name.split(/\s+/)[0])} directly. <a href="${SHEET_LINK}" style="color:${navy};">Open the requests sheet</a></p>
+</td></tr></table></body></html>`;
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: "Butler's Marina website <website@butlersmarinaannapolis.com>",
+      to: [env.NOTIFY_EMAIL || 'info@butlersmarinaannapolis.com'],
+      reply_to: r.email,
+      subject: `${flagged ? '[Check] ' : ''}Website request: ${r.type}, ${r.name}`,
+      html, text
+    })
+  });
+  if (!res.ok) throw new Error('resend ' + res.status + ' ' + (await res.text().catch(() => '')).slice(0, 300));
 }
 
 // ---------- confirmation email ----------
