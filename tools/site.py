@@ -354,10 +354,10 @@ AMEN_ITEMS = [
     ('Full bathroom and laundry', 'Slip holders have a full bathroom and a washer and dryer in the mixed-use building, a short walk from the docks.'),
     ('Fixed docks and lifts', 'Fixed docks throughout. Boat lifts from 7,000 to 30,000 lbs, plus jet ski and small tender lifts. <a href="lifts/">See the lifts</a>'),
     ('Winter de-icing', 'The water stays open around the docks all winter, so your boat can stay in all year.'),
-    ('Fire pit and grills', 'A fire pit with sitting areas, and grills on the grounds, for slip holders and overnight guests.'),
+    ('Fire pit and grills', 'A fire pit with sitting areas, and grills on the grounds, for slip holders, overnight guests and residential tenants.'),
     ('Electric at every slip', 'Each slip has its own electric meter. Overnight stays include electricity in the nightly rate.'),
     ('Wi-Fi and cable', 'Connected at the slips.'),
-    ('Slip holder parking', 'Parking on the property, off Chester Avenue, for slip holders. We provide a parking sticker for your car.'),
+    ('Off-street parking', 'Free off-street parking, plus parking on the property for slip holders with a Butler&#8217;s Marina sticker.'),
 ]
 AMENITIES = phero('Amenities', 'Everything you need between trips is on the property. We&#8217;re here to help you enjoy your stay.', 'aerial-1', 'The marina from above, with boats in their slips', '50% 70%') + f'''
 <section class="split split--navy" aria-labelledby="amen-title">
@@ -436,7 +436,7 @@ LOCATION = phero('On the Eastport peninsula', 'Boatyards, sail lofts and good fo
       </div>
       <div>
         <h3>By land</h3>
-        <p>409 Chester Avenue, Annapolis, MD 21403. Parking on the property is for slip holders, with a sticker from the marina.</p>
+        <p>409 Chester Avenue, Annapolis, MD 21403. Free off-street parking. Parking on the property is for slip holders, with a sticker from the marina.</p>
         <a class="link" href="{DIRECTIONS}" target="_blank" rel="noopener">Driving directions</a>
       </div>
     </div>
@@ -456,8 +456,8 @@ FAQS = [
     ('How is electric billed?', 'Each slip is metered individually, so annual slip holders pay for what their slip uses. Overnight stays include electricity in the $4 per foot rate.'),
     ('Is there a bathroom and laundry for slip holders?', 'Yes. A full bathroom and a washer and dryer in the mixed-use building on the property.'),
     ('Do you lease residential or office space?', 'Yes. The mixed-use building on the property has residential and office space available for long term lease. Openings are posted on the <a href="leasing/">leasing page</a>.'),
-    ('Is there parking?', 'Parking on the property is for slip holders only. Butler&#8217;s Marina provides a parking sticker to display on your car.'),
-    ('Can the public use the fire pit?', 'No. The fire pit and grills are for slip holders and overnight guests.'),
+    ('Is there parking?', 'Yes. There&#8217;s free off-street parking. Parking on the property is for slip holders only, with a parking sticker provided by Butler&#8217;s Marina.'),
+    ('Can the public use the fire pit?', 'No. The fire pit and grills are for slip holders, overnight guests and residential tenants.'),
     ('Are pets welcome?', 'Yes. Keep your pet on a leash and clean up after them.'),
     ('When did Butler&#8217;s open?', 'In 1998, founded by Marcellous and Pier Butler.'),
     ('Do you send texts?', 'Only if you opt in. Read our <a href="privacy/">SMS privacy policy</a> and <a href="tc/">messaging terms</a>.'),
@@ -554,7 +554,7 @@ PAGES = [
     ('overnight', 'overnight/', "Overnight dockage | Butler's Marina, Annapolis",
      'Overnight and transient dockage in Annapolis at $4 per foot per night, electricity included, upon availability.', OVERNIGHT, '', '', ''),
     ('amenities', 'amenities/', "Amenities | Butler's Marina, Annapolis",
-     'Full bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and slip holder parking.', AMENITIES, '', '', ''),
+     'Full bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and free off-street parking.', AMENITIES, '', '', ''),
     ('leasing', 'leasing/', "Residential and office leasing | Butler's Marina, Annapolis",
      'Long term residential and office space leasing in the mixed-use building at Butler&#8217;s Marina, Eastport, Annapolis.', LEASING, '', '', ''),
     ('location', 'location/', "Location | Butler's Marina, Eastport, Annapolis",
