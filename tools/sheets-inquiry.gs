@@ -45,7 +45,8 @@ function doPost(e) {
     'Texts OK: ' + d.sms,
     'Sheet: ' + ss.getUrl()
   ].filter(function (l) { return l !== ''; });
-  MailApp.sendEmail({ to: NOTIFY, replyTo: d.email, subject: d.type + ' request: ' + d.name, body: lines.join('\n') });
+  MailApp.sendEmail({ to: NOTIFY, name: "Butler's Marina website", replyTo: d.email,
+    subject: 'Website request: ' + d.type + ', ' + d.name, body: lines.join('\n') });
 
   return out({ ok: true });
 }
