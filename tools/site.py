@@ -8,6 +8,7 @@ and in the artifact preview. Run:  python3 site.py            -> /home/claude/bu
 import re, sys, os, math, json
 from dockmap import markup as dockmap
 from compass import compass
+FOOT_COMPASS = compass(0, 0, 40, label_size=16)
 from areamap import markup as areamap, teaser as area_teaser
 TEASE_SVG, TEASE_ROWS = area_teaser()
 
@@ -629,6 +630,7 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
   <div class="wrap foot__grid">
     <div class="foot__brand">
       <img class="foot__logo" src="assets/img/logo-light.svg" width="352" height="248" alt="Butler's Marina, Annapolis Maryland">
+      <p class="foot__fix"><svg class="foot__compass" viewBox="-60 -60 120 120" aria-hidden="true">{FOOT_COMPASS}</svg><span>38&#176; 58.1&#8242; N<br>76&#176; 28.8&#8242; W</span></p>
     </div>
     <div>
       <p class="foot__h">Dock</p>

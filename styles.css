@@ -533,6 +533,14 @@ p { margin: 0 0 1em; }
 .near__compass { right: 8px; top: 6px; }
 @media (max-width: 600px) { .am__compass, .near__compass { width: 84px; height: 84px; } }
 
+.foot__fix { display: flex; align-items: center; gap: 14px; margin: 22px 0 0; font-size: .9rem; line-height: 1.5; letter-spacing: .04em; color: #C5D1DE; }
+.foot__compass { width: 64px; height: 64px; flex: none; }
+.foot .compass__a, .foot .compass__d1 { fill: #fff; }
+.foot .compass__d2 { fill: var(--navy); stroke: #fff; stroke-opacity: .5; }
+.foot .compass__hub { fill: var(--navy); stroke: #fff; }
+.foot .compass__l { fill: #C5D1DE; }
+.foot .compass__n { fill: #FFA36B; }
+
 /* Splash: the burgee goes up once per visit */
 .splash { display: none; }
 .splash-on .splash { display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; background: #fff; animation: leave .7s cubic-bezier(.7,0,.2,1) 1.95s forwards; }
