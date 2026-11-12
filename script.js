@@ -1,3 +1,10 @@
+/* Cloudflare Turnstile on the request form, drawn when Cloudflare's script loads */
+window.bmCheck = function () {
+  var box = document.getElementById("inqCheck");
+  if (!box || !window.turnstile || window.bmCheckId != null) return;
+  window.bmCheckId = window.turnstile.render(box, { sitekey: box.getAttribute("data-sitekey"), theme: "light", size: "flexible", action: "inquiry" });
+};
+if (window.turnstile) window.bmCheck();
 (function () {
   "use strict";
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -501,12 +508,13 @@
       clearErrs();
       // Cloudflare's check under the form: wait for it rather than sending without it
       var ts = window.turnstile, tsBox = $("#inqCheck");
+      if (ts && window.bmCheckId != null) { try { data.turnstile = ts.getResponse(window.bmCheckId) || ""; } catch (e) {} }
       if (tsBox && !data.turnstile) {
         status.classList.add("is-err");
         status.textContent = ts ? "One moment while the security check finishes, then send again." : "The security check didn’t load. Refresh the page, or call (410) 626-0051.";
         return;
       }
-      var resetCheck = function () { try { if (ts && tsBox) ts.reset(tsBox); } catch (e) {} };
+      var resetCheck = function () { try { if (ts && window.bmCheckId != null) ts.reset(window.bmCheckId); } catch (e) {} };
       var btn = $(".inq__send", form);
       btn.disabled = true;
       status.textContent = "Sending…";
