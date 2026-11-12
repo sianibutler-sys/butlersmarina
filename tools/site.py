@@ -335,7 +335,7 @@ OVERNIGHT = phero('Overnight dockage', '$4 per foot, per night, with electricity
         <li>Electricity included</li>
         <li>Bathroom and laundry</li>
         <li>Wi-Fi at the slip</li>
-        <li>Fire pit and grills</li>
+        <li>Fire pit</li>
       </ul>
       <a class="btn btn--signal" href="{q('Overnight stay')}">Request overnight dates</a>
     </div>
@@ -356,7 +356,7 @@ AMEN_ITEMS = [
     ('Full bathroom and laundry', 'Slip holders have a full bathroom and a washer and dryer in the mixed-use building, a short walk from the docks.'),
     ('Fixed docks and lifts', 'Fixed docks throughout. Boat lifts from 7,000 to 30,000 lbs, plus jet ski and small tender lifts. <a href="lifts/">See the lifts</a>'),
     ('Winter de-icing', 'The water stays open around the docks all winter, so your boat can stay in all year.'),
-    ('Fire pit and grills', 'A fire pit with sitting areas, and grills on the grounds, for slip holders, overnight guests and residential tenants.'),
+    ('Fire pit', 'A fire pit with sitting areas on the grounds, for slip holders, overnight guests and residential tenants.'),
     ('Electric at every slip', 'Each slip has its own electric meter. Overnight stays include electricity in the nightly rate.'),
     ('Wi-Fi and cable', 'Connected at the slips.'),
     ('Off-street parking', 'Free off-street parking, plus parking on the property for slip holders with a Butler&#8217;s Marina sticker.'),
@@ -459,7 +459,7 @@ FAQS = [
     ('Is there a bathroom and laundry for slip holders?', 'Yes. A full bathroom and a washer and dryer in the mixed-use building on the property.'),
     ('Do you lease residential or office space?', 'Yes. The mixed-use building on the property has residential and office space available for long term lease. Openings are posted on the <a href="leasing/">leasing page</a>.'),
     ('Is there parking?', 'Yes. There&#8217;s free off-street parking. Parking on the property is for slip holders only, with a parking sticker provided by Butler&#8217;s Marina.'),
-    ('Can the public use the fire pit?', 'No. The fire pit and grills are for slip holders, overnight guests and residential tenants.'),
+    ('Can the public use the fire pit?', 'No. The fire pit is for slip holders, overnight guests and residential tenants.'),
     ('Are pets welcome?', 'Yes. Keep your pet on a leash and clean up after them.'),
     ('When did Butler&#8217;s open?', 'In 1998, founded by Marcellous and Pier Butler.'),
     ('Do you send texts?', 'Only if you opt in. Read our <a href="privacy/">SMS privacy policy</a> and <a href="tc/">messaging terms</a>.'),
@@ -551,7 +551,7 @@ LD = '''<script type="application/ld+json">
    "description": "Boutique marina on Back Creek in Eastport, Annapolis, with annual slips, boat lifts, overnight dockage and residential and office space for lease.",
    "image": "https://butlersmarinaannapolis.com/assets/img/share-logo.png", "logo": "https://butlersmarinaannapolis.com/assets/img/share-logo.png",
    "hasMap": "https://www.google.com/maps/search/?api=1&query=409+Chester+Ave+Annapolis+MD+21403", "areaServed": "Annapolis, Maryland",
-   "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": "Fixed docks", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Boat lifts", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Electric metered at each slip", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Winter de-icing", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Bathroom", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Laundry", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Wi-Fi", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Fire pit and grills", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Free off-street parking", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Pets welcome on leash", "value": true}],
+   "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": "Fixed docks", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Boat lifts", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Electric metered at each slip", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Winter de-icing", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Bathroom", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Laundry", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Wi-Fi", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Fire pit", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Free off-street parking", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Pets welcome on leash", "value": true}],
    "sameAs": ["https://www.facebook.com/butlersmarina", "https://www.instagram.com/butlers_marina", "https://twitter.com/butlersmarina"]}
   </script>'''
 
@@ -566,7 +566,7 @@ PAGES = [
     ('overnight', 'overnight/', "Transient dockage in Annapolis, $4/ft | Butler's Marina",
      'Overnight boat dockage on Back Creek, a short walk to downtown Annapolis. $4 per foot per night, electricity included, upon availability.', OVERNIGHT, '', '', ''),
     ('amenities', 'amenities/', "Marina amenities in Eastport, Annapolis | Butler's Marina",
-     'Bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and free off-street parking.', AMENITIES, '', '', ''),
+     'Bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, a fire pit, Wi-Fi and free off-street parking.', AMENITIES, '', '', ''),
     ('leasing', 'leasing/', "Residential and office leasing in Eastport | Butler's Marina",
      'Residential and office space available for long term lease in the mixed-use building at Butler&#8217;s Marina, on the water in Eastport, Annapolis.', LEASING, '', '', ''),
     ('location', 'location/', "Directions to Butler's Marina, 409 Chester Ave, Annapolis",
