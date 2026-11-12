@@ -286,23 +286,27 @@ LIFTS = phero('Boat lifts', 'Lifts for boats from 7,000 to 30,000 lbs, plus jet 
       <h2 id="lift-title">{RULE}Three kinds of lift</h2>
       <p>Lifts are one of the first things boaters ask about, so we keep a range. Availability changes through the year.</p>
     </div>
-    <ul class="steps__list kinds">
-      <li>
-        <p class="kinds__k">7,000&#8211;30,000 lbs</p>
-        <h3>Boat lifts</h3>
-        <p>For powerboats. Tell us your boat&#8217;s weight and we&#8217;ll match the lift.</p>
-      </li>
-      <li>
-        <p class="kinds__k">Personal watercraft</p>
-        <h3>Jet ski lifts</h3>
-        <p>Keep a jet ski out of the water and ready to ride.</p>
-      </li>
-      <li>
-        <p class="kinds__k">Dinghies</p>
-        <h3>Tender lifts</h3>
-        <p>Small tender lifts, so the dinghy stays dry and off your deck.</p>
-      </li>
-    </ul>
+    <div class="scale">
+      <div class="scale__ends" aria-hidden="true"><span>Smallest</span><span>Up to 30,000 lbs</span></div>
+      <div class="scale__bar" aria-hidden="true"></div>
+      <ol class="scale__pts">
+        <li>
+          <p class="scale__k">Dinghies</p>
+          <h3>Tender lifts</h3>
+          <p>Small tender lifts, so the dinghy stays dry and off your deck.</p>
+        </li>
+        <li>
+          <p class="scale__k">Personal watercraft</p>
+          <h3>Jet ski lifts</h3>
+          <p>Keep a jet ski out of the water and ready to ride.</p>
+        </li>
+        <li>
+          <p class="scale__k">7,000&#8211;30,000 lbs</p>
+          <h3>Boat lifts</h3>
+          <p>For powerboats. Tell us your boat&#8217;s weight and we&#8217;ll match the lift.</p>
+        </li>
+      </ol>
+    </div>
     <div class="split__cta">
       <a class="btn btn--navy" href="{q('Boat lift')}">Ask about a lift</a>
       <a class="btn btn--line" href="slips/">See annual slips</a>
@@ -322,30 +326,28 @@ LIFTS = phero('Boat lifts', 'Lifts for boats from 7,000 to 30,000 lbs, plus jet 
 ''' + CLOSE
 
 OVERNIGHT = phero('Overnight dockage', '$4 per foot, per night, with electricity and every amenity included. Upon availability.', 'docks', 'A sailboat tied up at the docks with the marina buildings behind', '50% 55%') + f'''
-<section class="steps" aria-labelledby="steps-title">
-  <div class="wrap">
-    <div class="steps__head">
-      <h2 id="steps-title">{RULE}Overnight dockage in three steps</h2>
-      <p>Overnight dockage is upon availability, so reserve ahead if you can. Flexible? Ask to join the waiting list.</p>
+<section class="steps steps--rate" aria-labelledby="steps-title">
+  <div class="wrap rt">
+    <div class="rt__card">
+      <p class="rt__big">$4</p>
+      <p class="rt__per">per foot, per night. Upon availability.</p>
+      <ul class="rt__inc" aria-label="Included">
+        <li>Electricity included</li>
+        <li>Bathroom and laundry</li>
+        <li>Wi-Fi at the slip</li>
+        <li>Fire pit and grills</li>
+      </ul>
+      <a class="btn btn--signal" href="{q('Overnight stay')}">Request overnight dates</a>
     </div>
-    <ol class="steps__list">
-      <li>
-        <p class="steps__n">1</p>
-        <h3>Request your dates</h3>
-        <p>Send your boat&#8217;s length and dates, or call {PHONE}.</p>
-      </li>
-      <li>
-        <p class="steps__n">2</p>
-        <h3>We confirm your slip</h3>
-        <p>We check availability and hold a slip that fits your boat.</p>
-      </li>
-      <li>
-        <p class="steps__n">3</p>
-        <h3>Tie up and settle in</h3>
-        <p>Check in from 1:00 PM. Check out by 11:00 AM.</p>
-      </li>
-    </ol>
-    <a class="btn btn--navy" href="{q('Overnight stay')}">Request overnight dates</a>
+    <div class="rt__body">
+      <h2 id="steps-title">{RULE}Overnight dockage in three steps</h2>
+      <p class="rt__lede">Overnight dockage is upon availability, so reserve ahead if you can. Flexible? Ask to join the waiting list.</p>
+      <ol class="tl">
+        <li><span class="tl__n">1</span><h3>Request your dates</h3><p>Send your boat&#8217;s length and dates, or call {PHONE}.</p></li>
+        <li><span class="tl__n">2</span><h3>We confirm your slip</h3><p>We check availability and hold a slip that fits your boat.</p></li>
+        <li><span class="tl__n">3</span><h3>Tie up and settle in</h3><p class="tl__times"><span>Check in 1:00 PM</span><span>Check out 11:00 AM</span></p></li>
+      </ol>
+    </div>
   </div>
 </section>
 ''' + CLOSE
