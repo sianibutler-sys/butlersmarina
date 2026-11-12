@@ -301,7 +301,7 @@ if __name__ == '__main__':
     _, data, _ = build()
     for p in data: print(p['cat'], p['name'], p['mins'], 'min', p['mi'], 'mi')
 
-TEASE = ["Davis&#8217; Pub", 'Boatyard Bar &amp; Grill', 'City Dock and Ego Alley', 'U.S. Naval Academy', 'Maryland State House']
+TEASE = ["Davis&#8217; Pub", 'Rumhouse', "Lewnes&#8217; Steakhouse", 'City Dock and Ego Alley', 'U.S. Naval Academy', 'Maryland State House']
 def teaser():
     """A still preview of the area map for the home page."""
     import re
@@ -312,10 +312,19 @@ def teaser():
     pick = [p for n in TEASE for p in data if p['name'] == n]
     pts = [(p['x'], p['y']) for p in pick] + [home]
     x0 = min(x for x, _ in pts); x1 = max(x for x, _ in pts); y0 = min(y for _, y in pts); y1 = max(y for _, y in pts)
+    # label reach at the phone font size (17), so the square crop on phones never cuts a name
+    import html as _h
+    lx0, lx1 = x0, x1
+    for p in pick:
+        tw = len(_h.unescape(p['name'])) * 17 * 0.56 + 12
+        if p['x'] < home[0] - 20: lx0 = min(lx0, p['x'] - tw)
+        else: lx1 = max(lx1, p['x'] + tw)
     w, h = (x1 - x0) * 1.5, (y1 - y0) * 1.35
     if w / h > 4 / 3: h = w * 3 / 4
     else: w = h * 4 / 3
-    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    side = (lx1 - lx0) * 1.06           # phones show the middle square, h wide
+    if h < side: h = side; w = h * 4 / 3
+    cx, cy = (lx0 + lx1) / 2, (y0 + y1) / 2
     vb = f'{cx - w / 2:.0f} {cy - h / 2:.0f} {w:.0f} {h:.0f}'
     svg = re.sub(r'viewBox="[^"]*"', f'viewBox="{vb}"', svg, count=1).replace('class="am__svg"', 'class="am__svg amt__svg" style="--s:.45" aria-hidden="true" focusable="false"', 1)
     svg = svg.replace(' role="img" aria-label="Map of Eastport and downtown Annapolis with nearby places"', '')
