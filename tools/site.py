@@ -617,10 +617,13 @@ PAGES = [
 ]
 NOTFOUND = ('404', None, "Page not found | Butler's Marina", '', '<div class="legal"><div class="wrap"><h1>That slip is empty.</h1>\n<p>The site was rebuilt, so older links may not point anywhere now. Head <a href="./">back to the marina</a> or call (410) 626-0051.</p></div></div>', '', '', 'legal-page')
 
+OG_CARDS = {'slips', 'lifts', 'overnight', 'amenities', 'leasing', 'location', 'faq', 'contact'}  # 1200x630 cards in assets/og, made from tools/og-cards.html
+
 def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
     nav = '\n    '.join(
         f'<a href="{h}" aria-current="page" class="is-here">{t}</a>' if h == key else f'<a href="{h}">{t}</a>' for h, t in NAV)
     canon = f'https://butlersmarinaannapolis.com/{slug + "/" if slug else ""}'
+    og_img = 'https://butlersmarinaannapolis.com/' + (f'assets/og/{slug}.jpg' if slug in OG_CARDS else 'assets/img/share-logo.png')
     canon_tag = '' if slug == '404' else f'<link rel="canonical" href="{canon}">\n  '
     descr = f'<meta name="description" content="{desc}">\n  ' if desc else ''
     splash = '' if body_cls else '''<div class="splash" id="splash" aria-hidden="true">
@@ -654,11 +657,11 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
   <meta property="og:title" content="{title}">
   <meta property="og:description" content="{desc or 'A boutique marina on Back Creek in Eastport, Annapolis.'}">
   <meta property="og:url" content="{canon}">
-  <meta property="og:image" content="https://butlersmarinaannapolis.com/assets/img/share-logo.png">
+  <meta property="og:image" content="{og_img}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://butlersmarinaannapolis.com/assets/img/share-logo.png">
+  <meta name="twitter:image" content="{og_img}">
   <meta name="theme-color" content="#0D1A2B">
   <link rel="icon" href="assets/img/burgee.svg" type="image/svg+xml">
   <link rel="icon" href="assets/img/favicon-64.png" type="image/png" sizes="64x64">
