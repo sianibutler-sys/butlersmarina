@@ -222,7 +222,7 @@ HOME = f'''<section class="hero" aria-labelledby="hero-title">
     <nav class="go" aria-label="Plan your visit">
       <a href="amenities/"><span>Amenities</span><small>Bathroom, laundry, de-icing, parking</small>{ARROW}</a>
       <a href="location/"><span>Location</span><small>Getting here, and where to eat in Eastport</small>{ARROW}</a>
-      <a href="faq/"><span>Questions</span><small>The ones we hear on the dock</small>{ARROW}</a>
+      <a href="faq/"><span>Questions</span><small>Electric, winter, lifts, rates</small>{ARROW}</a>
     </nav>
   </div>
 </section>
