@@ -499,13 +499,25 @@
         return;
       }
       clearErrs();
+      // Cloudflare's check under the form: wait for it rather than sending without it
+      var ts = window.turnstile, tsBox = $("#inqCheck");
+      if (tsBox && !data.turnstile) {
+        status.classList.add("is-err");
+        status.textContent = ts ? "One moment while the security check finishes, then send again." : "The security check didn’t load. Refresh the page, or call (410) 626-0051.";
+        return;
+      }
+      var resetCheck = function () { try { if (ts && tsBox) ts.reset(tsBox); } catch (e) {} };
       var btn = $(".inq__send", form);
       btn.disabled = true;
       status.textContent = "Sending…";
       fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); })
-        .then(function () { form.reset(); fieldsFor("Annual slip"); status.textContent = "Request sent. We’ll be in touch soon."; })
+        .then(function () { form.reset(); resetCheck(); fieldsFor("Annual slip"); status.textContent = "Request sent. We’ll be in touch soon."; })
         .catch(function (j) {
+          resetCheck();
+          if (j && j.status === 400 && j.fields && j.fields.turnstile) {
+            status.classList.add("is-err"); status.textContent = j.fields.turnstile; return;
+          }
           if (j && j.status === 400 && j.fields) {
             var first = showErrs(j.fields); status.classList.add("is-err");
             status.textContent = "Check the highlighted fields."; if (first) first.focus(); return;

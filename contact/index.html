@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
   <link rel="preload" href="../assets/fonts/hanken.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/source-serif.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../styles.css?v=4a704fa8">
+  <link rel="stylesheet" href="../styles.css?v=b54c3f8b">
   <script>
     (function () {
       // once per visit: marked as seen the moment it shows, in a cookie and in storage, so any page after it skips it
@@ -129,6 +129,8 @@
         <span>Email me marina news, like slip openings and events. Unsubscribe anytime. See our <a href="../privacy/">privacy policy</a>.</span>
       </label>
       <p class="inq__fine">We&#8217;ll email you a copy of your request. Neither box is required to send it.</p>
+      <div class="inq__check cf-turnstile" id="inqCheck" data-sitekey="0x4AAAAAAF9hj-YQ0fUqg2QO" data-theme="light" data-size="flexible" data-action="../inquiry" data-response-field-name="turnstile"></div>
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
       <button class="btn btn--signal inq__send" type="submit">Send request</button>
       <p class="inq__status" id="inqStatus" role="status"></p>
     </form>
@@ -169,6 +171,6 @@
   </div>
 </footer>
 
-<script src="../script.js?v=a425958b" defer></script>
+<script src="../script.js?v=3d0a6113" defer></script>
 </body>
 </html>

@@ -527,6 +527,8 @@ CONTACT = f'''<section class="contact contact--page" aria-labelledby="page-title
         <span>Email me marina news, like slip openings and events. Unsubscribe anytime. See our <a href="privacy/">privacy policy</a>.</span>
       </label>
       <p class="inq__fine">We&#8217;ll email you a copy of your request. Neither box is required to send it.</p>
+      <div class="inq__check cf-turnstile" id="inqCheck" data-sitekey="0x4AAAAAAF9hj-YQ0fUqg2QO" data-theme="light" data-size="flexible" data-action="inquiry" data-response-field-name="turnstile"></div>
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
       <button class="btn btn--signal inq__send" type="submit">Send request</button>
       <p class="inq__status" id="inqStatus" role="status"></p>
     </form>

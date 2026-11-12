@@ -8,6 +8,7 @@
 // Optional, for the confirmation email sent to the person who asked (through Resend):
 //   RESEND_API_KEY  API key from resend.com, with butlersmarinaannapolis.com verified there
 //   EMAIL_FROM      optional; defaults to Butler's Marina <info@butlersmarinaannapolis.com>
+//   TURNSTILE_SECRET  secret key for the Cloudflare Turnstile check under the form
 //   NOTIFY_EMAIL    optional; where team alerts go (defaults to info@butlersmarinaannapolis.com)
 //   SITE_URL        e.g. https://butlersmarinaannapolis.com (falls back to the address the form was sent from)
 
@@ -27,6 +28,21 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const fields = check(data);
   if (Object.keys(fields).length) return json({ error: 'Some fields need fixing', fields }, 400);
+
+  // Cloudflare Turnstile, the check under the form
+  if (env.TURNSTILE_SECRET) {
+    let pass = false;
+    try {
+      const body = new FormData();
+      body.append('secret', env.TURNSTILE_SECRET);
+      body.append('response', String(data.turnstile || ''));
+      const ip = request.headers.get('CF-Connecting-IP'); if (ip) body.append('remoteip', ip);
+      const v = await (await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body })).json();
+      pass = v.success === true;
+      if (!pass) console.error('turnstile failed:', JSON.stringify(v['error-codes'] || []));
+    } catch (err) { console.error('turnstile error:', err && err.message); }
+    if (!pass) return json({ error: 'Security check failed', fields: { turnstile: 'The security check didn’t go through. Try sending again, or call (410) 626-0051.' } }, 400);
+  }
   if (!env.SHEETS_URL || !env.SHEETS_SECRET) {
     return json({ error: 'Form not configured' }, 503);
   }
