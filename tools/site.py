@@ -466,6 +466,10 @@ def slug(t):
     t = re.sub(r'&#\d+;|&\w+;', '', t)
     return 'q-' + re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')[:48]
 
+import html as _html, re as _re
+FAQ_LD = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+    {"@type": "Question", "name": _html.unescape(_re.sub(r'<[^>]+>', '', q)),
+     "acceptedAnswer": {"@type": "Answer", "text": _html.unescape(_re.sub(r'<[^>]+>', '', a))}} for q, a in FAQS]}, ensure_ascii=False).replace('</', '<\\/') + '</script>'
 FAQ = phero('Questions we hear on the dock', f'Don&#8217;t see yours? Call {PHONE} or <a href="contact/">send us a note</a>.') + f'''
 <section class="faq" aria-label="Questions and answers">
   <div class="wrap faq__one">
@@ -542,30 +546,34 @@ LD = '''<script type="application/ld+json">
    "url": "https://butlersmarinaannapolis.com/", "telephone": "+1-410-626-0051", "email": "info@butlersmarinaannapolis.com",
    "address": {"@type": "PostalAddress", "streetAddress": "409 Chester Avenue", "addressLocality": "Annapolis", "addressRegion": "MD", "postalCode": "21403", "addressCountry": "US"},
    "geo": {"@type": "GeoCoordinates", "latitude": 38.9689, "longitude": -76.4802},
+   "description": "Boutique marina on Back Creek in Eastport, Annapolis, with annual slips, boat lifts, overnight dockage and residential and office space for lease.",
+   "image": "https://butlersmarinaannapolis.com/assets/img/share-logo.png", "logo": "https://butlersmarinaannapolis.com/assets/img/share-logo.png",
+   "hasMap": "https://www.google.com/maps/search/?api=1&query=409+Chester+Ave+Annapolis+MD+21403", "areaServed": "Annapolis, Maryland",
+   "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": "Fixed docks", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Boat lifts", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Electric metered at each slip", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Winter de-icing", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Bathroom", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Laundry", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Wi-Fi", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Fire pit and grills", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Free off-street parking", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Pets welcome on leash", "value": true}],
    "sameAs": ["https://www.facebook.com/butlersmarina", "https://www.instagram.com/butlers_marina", "https://twitter.com/butlersmarina"]}
   </script>'''
 
 # slug, nav key, title, description, body, extra head, extra body end, body class
 PAGES = [
-    ('', None, "Butler's Marina | Boutique marina on Back Creek, Eastport, Annapolis",
-     'Butler&#8217;s Marina is a premier boutique marina, on the Eastport peninsula, for boat docking in Annapolis, Maryland featuring long term residential and office space leasing. Come dock at Butler&#8217;s Marina in Annapolis!', HOME, LD, '', ''),
-    ('slips', 'slips/', "Annual slips | Butler's Marina, Annapolis",
-     'Annual boat slips on fixed docks in Eastport, Annapolis, for boats 25 to 75 feet. In the water all winter with de-icing.', SLIPS, '', '', ''),
-    ('lifts', 'lifts/', "Boat lifts | Butler's Marina, Annapolis",
-     'Boat lifts for 7,000 to 30,000 lbs, jet ski lifts and small tender lifts at Butler&#8217;s Marina in Eastport, Annapolis.', LIFTS, '', '', ''),
-    ('overnight', 'overnight/', "Overnight dockage | Butler's Marina, Annapolis",
-     'Overnight and transient dockage in Annapolis at $4 per foot per night, electricity included, upon availability.', OVERNIGHT, '', '', ''),
-    ('amenities', 'amenities/', "Amenities | Butler's Marina, Annapolis",
-     'Full bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and free off-street parking.', AMENITIES, '', '', ''),
-    ('leasing', 'leasing/', "Residential and office leasing | Butler's Marina, Annapolis",
-     'Long term residential and office space leasing in the mixed-use building at Butler&#8217;s Marina, Eastport, Annapolis.', LEASING, '', '', ''),
-    ('location', 'location/', "Location | Butler's Marina, Eastport, Annapolis",
-     '409 Chester Avenue on Back Creek, Eastport. Directions by water and land, and where to eat nearby.', LOCATION, '',
+    ('', None, "Butler's Marina | Boat slips on Back Creek, Annapolis MD",
+     'Boutique marina on Back Creek in Eastport, Annapolis. Annual slips, boat lifts and overnight dockage at $4/ft, plus residential and office space for lease.', HOME, LD, '', ''),
+    ('slips', 'slips/', "Annual boat slips in Annapolis | Butler's Marina",
+     'Annual slips on fixed docks in Eastport, Annapolis, for boats 25&#8211;75 ft. Each slip is metered for electric. In the water all winter with de-icing.', SLIPS, '', '', ''),
+    ('lifts', 'lifts/', "Boat lifts in Annapolis, 7,000&#8211;30,000 lbs | Butler's Marina",
+     'Lift slips for boats from 7,000 to 30,000 lbs, plus jet ski and tender lifts, on Back Creek in Eastport, Annapolis. See which slips have lifts.', LIFTS, '', '', ''),
+    ('overnight', 'overnight/', "Transient dockage in Annapolis, $4/ft | Butler's Marina",
+     'Overnight boat dockage on Back Creek, a short walk to downtown Annapolis. $4 per foot per night, electricity included, upon availability.', OVERNIGHT, '', '', ''),
+    ('amenities', 'amenities/', "Marina amenities in Eastport, Annapolis | Butler's Marina",
+     'Bathroom and laundry, fixed docks and lifts, electric metered at each slip, winter de-icing, fire pit and grills, Wi-Fi and free off-street parking.', AMENITIES, '', '', ''),
+    ('leasing', 'leasing/', "Residential and office leasing in Eastport | Butler's Marina",
+     'Residential and office space available for long term lease in the mixed-use building at Butler&#8217;s Marina, on the water in Eastport, Annapolis.', LEASING, '', '', ''),
+    ('location', 'location/', "Directions to Butler's Marina, 409 Chester Ave, Annapolis",
+     '409 Chester Avenue on Back Creek, Eastport. Directions by water and land, walk times to downtown Annapolis, and places to eat nearby.', LOCATION, '',
      f'<script type="text/plain" id="tideData">{TIDES}</script>\n', ''),
-    ('faq', 'faq/', "Questions | Butler's Marina, Annapolis",
-     'Answers on slip sizes, fixed docks, lifts, winter storage, overnight rates, the waiting list and leasing.', FAQ, '', '', ''),
-    ('contact', 'contact/', "Request a slip | Butler's Marina, Annapolis",
-     'Request an annual slip, a boat lift, overnight dates or a lease at Butler&#8217;s Marina. Or call (410) 626-0051.', CONTACT, '', '', ''),
+    ('faq', 'faq/', "Marina FAQ: slips, lifts, parking, pets | Butler's Marina",
+     'Answers on slip sizes, lifts, electric billing, winter in the water, overnight rates, parking, pets, the waiting list and leasing.', FAQ, FAQ_LD, '', ''),
+    ('contact', 'contact/', "Request a slip or lift | Butler's Marina, Annapolis",
+     'Request an annual slip, a boat lift, overnight dates or a lease at Butler&#8217;s Marina in Eastport, Annapolis. Or call (410) 626-0051.', CONTACT, '', '', ''),
     ('privacy', None, "SMS privacy policy | Butler's Marina", 'SMS privacy policy for Butler&#8217;s Waterfront &amp; Marina.',
      f'<div class="legal"><div class="wrap">{PRIVACY}</div></div>', '', '', 'legal-page'),
     ('unsubscribe', None, "Unsubscribe | Butler's Marina", '',
@@ -629,8 +637,8 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
   <title>{title}</title>
   {descr}{canon_tag}<meta property="og:type" content="website">
   <meta property="og:site_name" content="Butler's Marina">
-  <meta property="og:title" content="{title.split(' | ')[0] if slug else "Butler's Marina"}">
-  <meta property="og:description" content="The best place to dock in Annapolis. A boutique marina on Back Creek in Eastport, since 1998.">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc or 'A boutique marina on Back Creek in Eastport, Annapolis.'}">
   <meta property="og:url" content="{canon}">
   <meta property="og:image" content="https://butlersmarinaannapolis.com/assets/img/share-logo.png">
   <meta property="og:image:width" content="1200">
