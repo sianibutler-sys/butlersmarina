@@ -524,6 +524,10 @@ CONTACT = f'''<section class="contact contact--page" aria-labelledby="page-title
         <label class="f f--w"><span id="f-msg-label">Anything else (optional)</span><textarea id="f-message" name="message" rows="3"></textarea></label>
         <div class="hp" aria-hidden="true"><label for="f-bm-x">Leave this blank</label><input id="f-bm-x" name="bm_x" type="text" tabindex="-1" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other"></div>
       </div>
+      <label class="inq__sms inq__wait" data-for="wait">
+        <input id="f-wait" type="checkbox" name="waitlist" value="yes" checked>
+        <span>Add me to the waiting list if no slip fits right now. We&#8217;ll call when one opens.</span>
+      </label>
       <label class="inq__sms">
         <input id="f-sms" type="checkbox" name="sms" value="yes">
         <span>Text me about my request and marina updates. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. Consent is not a condition of renting a slip. See our <a href="privacy/">privacy policy</a> and <a href="tc/">messaging terms</a>.</span>
@@ -532,7 +536,7 @@ CONTACT = f'''<section class="contact contact--page" aria-labelledby="page-title
         <input id="f-news" type="checkbox" name="news" value="yes">
         <span>Email me marina news, like slip openings and events. Unsubscribe anytime. See our <a href="privacy/">privacy policy</a>.</span>
       </label>
-      <p class="inq__fine">We&#8217;ll email you a copy of your request. Neither box is required to send it.</p>
+      <p class="inq__fine">We&#8217;ll email you a copy of your request. None of these boxes is required to send it.</p>
       <div class="inq__check" id="inqCheck" data-sitekey="0x4AAAAAAF9hj-YQ0fUqg2QO"></div>
       <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=bmCheck" async defer></script>
       <button class="btn btn--signal inq__send" type="submit">Send request</button>

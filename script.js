@@ -361,10 +361,11 @@ if (window.turnstile) window.bmCheck();
     "Residential lease": ["What you’re looking for", "Move-in timing, how long, any questions"],
     "Office lease": ["What you’re looking for", "Size of team, move-in timing, any questions"]
   };
+  var WAIT = /^(Annual slip|Boat lift)$/;
   var fieldsFor = function (type) {
     if (!form) return;
     $$("[data-for]", form).forEach(function (el) {
-      el.hidden = !(el.dataset.for === "boat" ? BOAT.test(type) : el.dataset.for === "dates" ? type === "Overnight stay" : true);
+      el.hidden = !(el.dataset.for === "boat" ? BOAT.test(type) : el.dataset.for === "dates" ? type === "Overnight stay" : el.dataset.for === "wait" ? WAIT.test(type) : true);
     });
     var m = MSG[type] || MSG["Annual slip"];
     $("#f-msg-label").textContent = m[0];
@@ -497,6 +498,7 @@ if (window.turnstile) window.bmCheck();
       var data = {};
       new FormData(form).forEach(function (v, k) { data[k] = typeof v === "string" ? v.trim() : v; });
       data.sms = form.sms.checked ? "yes" : "no"; data.news = form.news.checked ? "yes" : "no";
+      data.waitlist = WAIT.test(data.type) ? (form.waitlist.checked ? "yes" : "no") : "";
       var errs = rules(data), n = Object.keys(errs).length;
       if (n) {
         var first = showErrs(errs);

@@ -11,7 +11,7 @@ const TAB = 'Requests';
 const UNSUB_TAB = 'Unsubscribed';
 const NOTIFY = 'info@butlersmarinaannapolis.com';
 const HEADERS = ['Received', 'Type', 'Name', 'Email', 'Phone', 'Boat', 'Length (ft)', 'Beam (ft)', 'Draft (ft)',
-  'Arriving', 'Leaving', 'Message', 'SMS consent', 'Status', 'Notes', 'From page', 'Newsletter'];
+  'Arriving', 'Leaving', 'Message', 'SMS consent', 'Status', 'Notes', 'From page', 'Newsletter', 'Waiting list'];
 
 function doPost(e) {
   let d;
@@ -32,7 +32,7 @@ function doPost(e) {
   // a leading apostrophe keeps Sheets from treating typed text as a formula
   const safe = (v) => (typeof v === 'string' && /^[=+\-@]/.test(v) ? "'" + v : v);
   sh.appendRow([when, d.type, safe(d.name), safe(d.email), safe(d.phone), safe(d.boat), d.loa, d.beam, d.draft,
-    d.arrive, d.depart, safe(d.message), d.sms, 'New', '', d.page, d.news || 'No']);
+    d.arrive, d.depart, safe(d.message), d.sms, 'New', '', d.page, d.news || 'No', d.waitlist || '']);
 
   // the website sends the team alert through Resend; this only emails when told to
   if (d.mail === true) notify(d, ss);
@@ -54,6 +54,7 @@ function notify(d, ss) {
     d.message ? '\n' + d.message : null,
     '',
     'Texts OK: ' + d.sms,
+    d.waitlist ? 'Waiting list: ' + d.waitlist : null,
     'Newsletter: ' + (d.news || 'No'),
     'Sheet: ' + ss.getUrl()
   ].filter(function (l) { return l !== null; });

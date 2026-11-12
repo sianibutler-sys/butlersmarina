@@ -727,3 +727,4 @@ p { margin: 0 0 1em; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .splash { display: none !important; }
 }
+.inq__wait[hidden] { display: none; }

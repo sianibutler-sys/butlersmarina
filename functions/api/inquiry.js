@@ -67,6 +67,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     message: (flagged ? '[Flagged: hidden spam field was filled. Check before replying.] ' : '') + clip(data.message, 4000),
     sms: data.sms === 'yes' ? 'Yes' : 'No',
     news: data.news === 'yes' ? 'Yes' : 'No',
+    waitlist: /^(Annual slip|Boat lift)$/.test(data.type) ? (data.waitlist === 'yes' ? 'Yes' : 'No') : '',
     page: clip(request.headers.get('Referer') || '', 300),
     mail: !env.RESEND_API_KEY   // the sheet emails the team only when Resend isn't set up
   };
@@ -109,7 +110,7 @@ async function sendAlert(env, r, flagged) {
     ['Request', r.type], ['Name', r.name], ['Email', r.email], ['Phone', r.phone],
     ['Boat', r.boat], ['Length', r.loa && r.loa + ' ft'], ['Beam', r.beam && r.beam + ' ft'], ['Draft', r.draft && r.draft + ' ft'],
     ['Arriving', nice(r.arrive)], ['Leaving', nice(r.depart)], ['Message', r.message],
-    ['Texts OK', r.sms], ['Newsletter', r.news], ['From page', r.page]
+    ['Waiting list', r.waitlist], ['Texts OK', r.sms], ['Newsletter', r.news], ['From page', r.page]
   ].filter(([, v]) => v);
   const text = [`${r.type} request from ${r.name}`, '', ...rows.map(([k, v]) => `${k}: ${v}`), '',
     'Reply to this email to answer them directly.', `Requests sheet: ${SHEET_LINK}`].join('\n');
@@ -161,7 +162,8 @@ async function sendConfirmation(env, site, r) {
   const rows = [
     ['Request', r.type], ['Name', r.name], ['Email', r.email], ['Phone', r.phone],
     ['Boat', r.boat], ['Length', r.loa && r.loa + ' ft'], ['Beam', r.beam && r.beam + ' ft'], ['Draft', r.draft && r.draft + ' ft'],
-    ['Arriving', nice(r.arrive)], ['Leaving', nice(r.depart)], ['Message', r.message]
+    ['Arriving', nice(r.arrive)], ['Leaving', nice(r.depart)], ['Message', r.message],
+    ['Waiting list', r.waitlist === 'Yes' ? 'Yes, add me if no slip fits right now' : r.waitlist]
   ].filter(([, v]) => v);
 
   const smsText = r.sms === 'Yes'
