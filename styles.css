@@ -701,6 +701,8 @@ p { margin: 0 0 1em; }
   .phero__mark { bottom: auto; top: 110px; width: 110px; opacity: .5; }
   .phero--navy h1 { padding-right: 0; }
   .dock-bar { display: grid; }
+  /* the open menu runs down to the quick-action bar, with room to scroll past it */
+  .bar__nav { max-height: none; height: 100svh; padding-bottom: calc(190px + env(safe-area-inset-bottom, 0px)); }
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
   .foot__grid { grid-template-columns: 1fr 1fr; }
   .foot__brand { grid-column: 1 / -1; }
