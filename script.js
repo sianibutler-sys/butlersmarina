@@ -492,6 +492,11 @@ if (window.turnstile) window.bmCheck();
     });
     $$("a[data-type]").forEach(function (a) { a.addEventListener("click", function () { setType(a.dataset.type); }); });
 
+    var again = $("#inqAgain");
+    if (again) again.addEventListener("click", function () {
+      $("#inqDone").hidden = true; form.hidden = false;
+      var first = $('input[name="type"]:checked', form) || $("#f-name"); if (first) first.focus();
+    });
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       status.className = "inq__status";
@@ -522,7 +527,17 @@ if (window.turnstile) window.bmCheck();
       status.textContent = "Sending…";
       fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); })
-        .then(function () { form.reset(); resetCheck(); fieldsFor("Annual slip"); status.textContent = "Request sent. We’ll be in touch soon."; })
+        .then(function () {
+          form.reset(); resetCheck(); fieldsFor("Annual slip"); status.textContent = "";
+          var done = $("#inqDone");
+          if (!done) { status.textContent = "Request sent. We’ll be in touch soon."; return; }
+          var put = function (k, v) { var el = $('[data-done="' + k + '"]', done); if (el && v) el.textContent = v; };
+          put("name", (data.name || "").split(/\s+/)[0]); put("email", data.email);
+          put("type", { "Annual slip": "annual slip request", "Boat lift": "boat lift request", "Overnight stay": "overnight request", "Residential lease": "residential lease request", "Office lease": "office lease request" }[data.type]);
+          form.hidden = true; done.hidden = false;
+          done.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+          done.focus({ preventScroll: true });
+        })
         .catch(function (j) {
           resetCheck();
           if (j && j.status === 400 && j.fields && j.fields.turnstile) {

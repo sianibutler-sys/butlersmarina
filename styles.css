@@ -279,6 +279,16 @@ p { margin: 0 0 1em; }
 .unsub__msg { min-height: 1.4em; color: var(--navy); font-weight: 500; }
 .inq__status { margin: 14px 0 0; min-height: 1.4em; color: var(--navy); }
 .inq__status.is-err { color: #B33A00; }
+.inq__done { background: #fff; color: var(--ink); border-radius: var(--radius); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); min-width: 0; align-self: center; text-align: center; padding: clamp(36px, 5vw, 64px) clamp(24px, 4vw, 48px); outline: none; animation: doneIn .45s ease-out; }
+.inq__done[hidden] { display: none; }
+.inq__done-mark { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--signal); color: var(--navy); margin-bottom: 20px; }
+.inq__done .inq__done-title { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 2.8rem); line-height: 1.1; margin: 0 0 12px; color: var(--navy); color: var(--navy) !important; }
+.inq__done-lede { font-size: 1.15rem; color: var(--navy); margin: 0 auto 18px; max-width: 28em; }
+.inq__done-note { color: var(--muted); margin: 0 auto 8px; max-width: 30em; }
+.inq__done-note a { color: var(--navy); white-space: nowrap; }
+.inq__done .btn--line { margin-top: 18px; }
+@keyframes doneIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .inq__done { animation: none; } }
 
 /* Footer */
 .foot { background: var(--navy); color: #B9C6D4; padding: 64px 0 26px; font-size: .98rem; }

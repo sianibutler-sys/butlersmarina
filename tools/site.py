@@ -542,6 +542,14 @@ CONTACT = f'''<section class="contact contact--page" aria-labelledby="page-title
       <button class="btn btn--signal inq__send" type="submit">Send request</button>
       <p class="inq__status" id="inqStatus" role="status"></p>
     </form>
+    <div class="inq__done" id="inqDone" hidden tabindex="-1" role="status" aria-live="polite">
+      <span class="inq__done-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h2 class="inq__done-title">Request sent.</h2>
+      <p class="inq__done-lede">Thank you, <span data-done="name">there</span>. We have your <span data-done="type">request</span> and will be in touch soon.</p>
+      <p class="inq__done-note">A copy is on its way to <strong data-done="email">your email</strong>. If it isn&#8217;t in your inbox in a few minutes, check spam.</p>
+      <p class="inq__done-note">For tonight or tomorrow, call <a href="tel:+14106260051">(410) 626-0051</a>.</p>
+      <button class="btn btn--line" type="button" id="inqAgain">Send another request</button>
+    </div>
   </div>
 </section>
 '''
