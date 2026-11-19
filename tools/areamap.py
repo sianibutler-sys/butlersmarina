@@ -229,7 +229,7 @@ def build():
         places.append(dict(i=i, cat=cat, name=name, addr=addr, x=round(x, 1), y=round(y, 1), mins=mins, mi=round(miles, 1),
                            route=path_d(ln.coords, False, 1), q=q))
     # svg
-    parts = [f'<svg class="am__svg" viewBox="0 0 {VW:.0f} {VH}" data-full="0 0 {VW:.0f} {VH}" role="img" aria-label="Map of Eastport and downtown Annapolis with nearby places">',
+    parts = [f'<svg class="am__svg" viewBox="0 0 {VW:.0f} {VH}" data-full="0 0 {VW:.0f} {VH}" role="group" aria-label="Map of Eastport and downtown Annapolis with nearby places">',
              f'<rect class="am__water" x="-400" y="-400" width="{VW + 800:.0f}" height="{VH + 800}"/>',
              f'<path class="am__land" d="{geom_d(land, 0.9)}"/>']
     if usna is not None: parts.append(f'<path class="am__usna" d="{geom_d(usna, 0.9)}"/>')

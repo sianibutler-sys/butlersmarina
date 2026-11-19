@@ -61,7 +61,7 @@ PHOTOS = {
     'apt-living': ([800, 1000, 1600], 1600, 1067),
 }
 
-def phero(h1, sub, photo=None, alt='', pos='50% 50%', extra=''):
+def phero(h1, sub, photo=None, alt='', pos='50% 50%', extra='', kicker=''):
     if photo:
         sl, w, h = PHOTOS[photo]
         pic = img(photo, sl, '100vw', w, h, alt, cls='phero__photo', lazy=False, prio=True).replace('<img', f'<img style="object-position:{pos}"')
@@ -72,7 +72,7 @@ def phero(h1, sub, photo=None, alt='', pos='50% 50%', extra=''):
     return f'''<section class="{cls}" aria-labelledby="page-title">
   {pic}
   <div class="wrap phero__inner">
-    <h1 id="page-title">{h1}</h1>
+    {f'<p class="phero__kicker">{kicker}</p>' if kicker else ''}<h1 id="page-title">{h1}</h1>
     <p class="phero__sub">{sub}</p>{extra}
   </div>
 </section>
@@ -568,6 +568,46 @@ LD = '''<script type="application/ld+json">
   </script>'''
 
 # slug, nav key, title, description, body, extra head, extra body end, body class
+A11Y = phero('Room at the dock for everyone.',
+  'This site is built for people who use screen readers, keyboards, magnification and voice control to find a slip, check a lift, plan an overnight stay or get directions to 409 Chester Avenue.',
+  kicker='Accessibility') + f'''
+<section class="a11y" aria-label="Accessibility statement">
+  <div class="wrap a11y__grid">
+    <div class="a11y__body">
+      <h2 id="standard">The standard we hold</h2>
+      <p>We build and check this site against the Web Content Accessibility Guidelines (WCAG) 2.2, Level AA. Every page runs through automated accessibility testing. Then we go through it by hand with a keyboard and a screen reader before any change goes live.</p>
+
+      <h2 id="built-in">What&#8217;s built in</h2>
+      <ul class="a11y__list">
+        <li>A &#8220;Skip to content&#8221; link is the first stop for keyboard users on every page.</li>
+        <li>Every link, button, form field, dock slip and map pin works with a keyboard. An orange outline shows where you are.</li>
+        <li>The dock map names each slip and says which ones have lifts. The area map names each place and its walk time, and every place on it is also listed in text with its address.</li>
+        <li>Site search opens with the Search button or the / key, and works with the arrow keys, Enter and Escape.</li>
+        <li>Text, links and buttons meet AA color contrast.</li>
+        <li>If your device is set to reduce motion, the opening animation and other movement on the site are turned off.</li>
+        <li>The phone number is tap-to-call on phones, and Directions opens your own map app.</li>
+        <li>The request form names any field that needs fixing, right beside the field, and screen readers announce it.</li>
+        <li>Photos carry text descriptions. Decorative images are hidden from screen readers.</li>
+      </ul>
+
+      <h2 id="in-progress">Still being worked on</h2>
+      <ul class="a11y__list">
+        <li>The security check at the bottom of the request form comes from Cloudflare, and we don&#8217;t control how it behaves. If it stops you, call or email and we&#8217;ll take your request directly.</li>
+        <li>Directions open in Google Maps, and our Instagram and Facebook pages run on those platforms. Their accessibility is up to them.</li>
+        <li>The dock map shows where each slip sits but not its exact size. Ask us and we&#8217;ll talk you through the layout.</li>
+      </ul>
+      <p class="a11y__date">Last reviewed November 2026.</p>
+    </div>
+
+    <aside class="a11y__help" aria-labelledby="help-title">
+      <h2 id="help-title">Something not working?</h2>
+      <p>Tell us what happened and which page you were on. We&#8217;ll help you get what you came for another way, whether that&#8217;s a slip, a lift or directions to the docks.</p>
+      <p class="a11y__contact"><a href="mailto:info@butlersmarinaannapolis.com?subject=Accessibility%20on%20butlersmarinaannapolis.com">info@butlersmarinaannapolis.com</a><br><a href="{TEL}">{PHONE}</a></p>
+    </aside>
+  </div>
+</section>
+'''
+
 PAGES = [
     ('', None, "Butler's Marina | Boat slips on Back Creek, Annapolis MD",
      'Boutique marina on Back Creek in Eastport, Annapolis. Annual slips, boat lifts and overnight dockage at $4/ft, plus residential and office space for lease.', HOME, LD, '', ''),
@@ -614,6 +654,8 @@ PAGES = [
 ''', 'legal-page'),
     ('tc', None, "Messaging terms | Butler's Marina", 'Messaging terms for Butler&#8217;s Waterfront &amp; Marina.',
      f'<div class="legal"><div class="wrap">{TC}</div></div>', '', '', 'legal-page'),
+    ('accessibility', None, "Accessibility statement | Butler's Marina",
+     'How the Butler&#8217;s Marina website meets WCAG 2.2 AA, what&#8217;s built in, what&#8217;s still being worked on, and how to reach us if something doesn&#8217;t work.', A11Y, '', '', ''),
 ]
 NOTFOUND = ('404', None, "Page not found | Butler's Marina", '', '<div class="legal"><div class="wrap"><h1>That slip is empty.</h1>\n<p>The site was rebuilt, so older links may not point anywhere now. Head <a href="./">back to the marina</a> or call (410) 626-0051.</p></div></div>', '', '', 'legal-page')
 
@@ -718,6 +760,7 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
 </nav>
 
 <footer class="foot">
+  <p class="foot__a11y">We want this site to work for everyone. <a href="accessibility/">Read the accessibility statement</a></p>
   <div class="wrap foot__grid">
     <div class="foot__brand">
       <img class="foot__logo" src="assets/img/logo-light.svg" width="352" height="248" alt="Butler's Marina, Annapolis Maryland">
@@ -738,7 +781,7 @@ def page(slug, key, title, desc, body, head_extra, end_extra, body_cls):
   </div>
   <div class="wrap foot__base">
     <span>&#169; <span id="yr">2026</span> Butler&#8217;s Waterfront &amp; Marina. A boutique marina on Back Creek since 1998.</span>
-    <span class="foot__legal"><a href="privacy/">Privacy</a><a href="tc/">Messaging terms</a></span>
+    <span class="foot__legal"><a href="privacy/">Privacy</a><a href="tc/">Messaging terms</a><a href="accessibility/">Accessibility</a></span>
     <span class="by-sc">Site by <img src="assets/img/siani-creates.png" alt="Siani Creates" width="35" height="13"></span>
   </div>
 </footer>
