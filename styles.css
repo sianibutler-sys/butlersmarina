@@ -32,7 +32,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.1rem, 3.9vw, 3.2rem); line-height: 1.08; letter-spacing: -.015em; color: var(--navy); font-optical-sizing: auto; }
 h3 { font-weight: 600; font-size: 1.2rem; line-height: 1.25; letter-spacing: -.01em; }
 p { margin: 0 0 1em; }
-.rule { display: block; width: 44px; height: 2px; background: var(--signal); margin-bottom: 22px; }
+.rule { display: block; width: 64px; height: 26px; background: url(assets/img/wave.png) left center / contain no-repeat; margin-bottom: 18px; }
 .sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: absolute; left: -999px; top: 8px; z-index: 90; background: var(--signal); color: var(--navy); padding: 8px 14px; }
 .skip:focus { left: 8px; }
